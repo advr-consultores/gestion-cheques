@@ -2,39 +2,22 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth'
-import { getDatabase, ref, push, get, update} from 'firebase/database'
-import { getStorage, uploadBytes, ref as sRef, getDownloadURL } from 'firebase/storage'
+import { getDatabase, ref, push, get, update, set, remove } from 'firebase/database'
+import { getStorage, uploadBytes, ref as sRef, getDownloadURL, deleteObject } from 'firebase/storage'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    loadedMeetups: [
-      {
-        imagenURL: 'https://upload.wikimedia.org/wikipedia/commons/4/47/New_york_times_square-terabass.jpg',
-        id: 'afajfjadfaadfa323',
-        nombre: 'Cheque #1',
-        fecha: new Date(),
-        cliente: 'BBVA',
-        descripcion: 'New York, New York!'
-      },
-      {
-        imagenURL: 'https://upload.wikimedia.org/wikipedia/commons/7/7a/Paris_-_Blick_vom_gro%C3%9Fen_Triumphbogen.jpg',
-        id: 'aadsfhbkhlk1241',
-        nombre: 'Cheque #2',
-        fecha: new Date(),
-        cliente: 'Movi',
-        descripcion: 'It\'s Paris!'
-      }
-    ],
+    cheques: [],
     user: null,
   },
   mutations: {
-    setLoadedMeetups (state, payload) {
-      state.loadedMeetups = payload
+    setCheques(state, payload) {
+      state.cheques = payload
     },
-    createMeetup(state, payload) {
-      state.loadedMeetups.push(payload)
+    setCheque(state, payload) {
+      state.cheques.push(payload)
     },
     setUser(state, payload) {
       state.user = payload
@@ -50,89 +33,139 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    loadMeetups ({commit}) {
-      commit('setLoading', true)
+    listarCheques({commit}) {
       const db = getDatabase()
       get(ref(db, 'cheques')).then((data) => {
-        const meetups = []
+        const cheques = []
         const obj = data.val()
         for (let key in obj) {
-          meetups.push({
-            id: key,
-            nombre: obj[key].nombre,
-            descripcion: obj[key].descripcion,
-            imagenURL: obj[key].imagenURL,
-            fecha: obj[key].fecha,
-            cliente: obj[key].cliente,
+          cheques.push({
+            'id': key,
+            'nombre': obj[key].nombre,
+            'descripcion': obj[key].descripcion,
+            'imagenURL': obj[key].imagenURL,
+            'fecha': obj[key].fecha,
+            'cliente': obj[key].cliente,
+            'recibo': obj[key].recibo,
+            'statu': obj[key].statu,
           })
         }
-        commit('setLoadedMeetups', meetups)
-        commit('setLoading', false)
-      })
-      .catch(
-        (error) => {
-          console.log(error)
-          commit('setLoading', false)
-        }
-      )
+        commit('setCheques', cheques)
+      }).catch((error) => { return { 'message': messageError, 'code': codeError, 'error': messageError } })
+      return { 'message': 'Consulta satisfactoria.' }
     },
-    createMeetup({ commit, getters }, payload) {
-      const meetup = {
-        nombre: payload.nombre,
-        cliente: payload.cliente,
-        imagen: payload.imagen,
-        descripcion: payload.descripcion,
-        fecha: '',
-        // creatorId: getters.user.id
+    async verCheque({commit}, { uid }) {
+      try {
+        const db = getDatabase()
+        const data = await get(ref(db, 'cheques/' + uid))
+        const cheque = []
+        const obj = data.val()
+        for (let key in obj) {
+          cheque.push({
+            'id': key,
+            'nombre': obj[key].nombre,
+            'descripcion': obj[key].descripcion,
+            'imagenURL': obj[key].imagenURL,
+            'fecha': obj[key].fecha,
+            'cliente': obj[key].cliente,
+            'recibo': obj[key].recibo,
+            'statu': obj[key].statu,
+          })
+        }
+        commit('setCheque', cheque)
+        return { 'message': 'Consulta satisfactoria.' }
+      } catch (error) {
+        const messageError = error.message
+        const codeError = error.code
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
       }
+    },
+    async registarCheque({ commit }, { nombre, cliente, imagen, descripcion, fecha, statu }) {
       const db = getDatabase()
-      const storage = getStorage();
-      let imagenURL
+      const storage = getStorage()
       let key
-      const filename = payload.imagen.name
+      const filename = imagen.name
       const extension = filename.slice(filename.lastIndexOf('.'))
-      push(ref(db, 'cheques'), { 
-        nombre: payload.nombre,
-        cliente: payload.cliente,
-        descripcion: payload.descripcion,
-        fecha: '2222-22-22',
+      await push(ref(db, 'cheques'), { 
+        'nombre': nombre,
+        'cliente': cliente,
+        'descripcion': descripcion,
+        'fecha': fecha,
+        'statu': statu
       }).then((data) => {
         key = data.key
         return key
       }).then(key => {
-        const file = payload.imagen
-        const storageRef = sRef(storage, 'fotos/' + key + extension)
-        return uploadBytes(storageRef, file)
-      })
-      .then(() => {
-        const starsRef = sRef(storage, 'fotos/' + key + extension);
-
-        // Get the download URL
-        getDownloadURL(starsRef)
-          .then((url) => {
+        const imagenURL = imagen
+        const spaceRef = sRef(storage, 'cheques/' + key + extension)
+        uploadBytes(spaceRef, imagenURL).then((snapshot) => {
+          getDownloadURL(snapshot.ref).then((url) => {
             update(ref(db, 'cheques/' + key), {
-              imagenURL: url
-            });
+              'imagenURL': url
+            })
           })
-        
-      }).then(() =>{
-        commit('createMeetup', {
-          ...meetup,
-          imagenURL: imagenURL,
-          id: key
         })
-      })
-      .catch((error) => {
+      }).catch((error) => {
         const messageError = error.message
         const codeError = error.code
-        alert(messageError, codeError)
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
       })
-      // Reach out to firebase and store it
+      return { 'message': 'Cheque creado correctamente.', 'uid': key }
+    },
+    async actualizarCheque({ commit }, { nombre, cliente, imagenURL, descripcion, fecha, statu }) {
+      const db = getDatabase()
+      await set(ref(db, 'cheques'), { 
+        'nombre': nombre,
+        'cliente': cliente,
+        'descripcion': descripcion,
+        'imagenURL': imagenURL,
+        'fecha': fecha,
+        'statu': statu
+      }).catch((error) => {
+        const messageError = error.message
+        const codeError = error.code
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
+      })
+      return { 'message': 'Cheque actulizado correctamente.' }
+    },
+    async eliminarCheque({ commit }, { uid, extension }) {
+      try {
+        const db = getDatabase()
+        await remove(ref(db, 'cheques/' + uid))
+        const storage = getStorage()
+        const desertRef = sRef(storage, `cheques/${uid}.${extension}`)
+        await deleteObject(desertRef)
+        return { 'message': 'Eliminación exitosa' }
+      } catch(error) {
+        const messageError = error.message
+        const codeError = error.code
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
+      }
+    },
+    async subirRecibo(context, { uid, imagen, statu }){
+      try {
+        const db = getDatabase()
+        const storage = getStorage()
+        const filename = imagen.name
+        const extension = filename.slice(filename.lastIndexOf('.'))
+        const spaceRef = sRef(storage, 'recibos/' + uid + extension)
+        await uploadBytes(spaceRef, imagen).then((snapshot) => {
+          getDownloadURL(snapshot.ref).then((url) => {
+            update(ref(db, 'cheques/' + uid), {
+              'recibo': url,
+              'statu': statu
+            })
+          })
+        })
+      } catch(error) {
+        const messageError = error.message
+        const codeError = error.code
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
+      }
     },
     cerrarSesion({commit}) {
       const auth = getAuth();
       signOut(auth).then(() => {
-        // Sign-out successful.
         commit('setUser', null)
       }).catch((error) => {
         const errorMessage = error.message
@@ -167,14 +200,14 @@ export default new Vuex.Store({
     },
   },
   getters: {
-    loadedMeetups(state) {
-      return state.loadedMeetups.sort((meetupA, meetupB) => {
+    getCheques(state) {
+      return state.cheques.sort((meetupA, meetupB) => {
         return meetupA.date > meetupB.date
       })
     },
     loadedMeetup(state) {
       return (meetupId) => {
-        return state.loadedMeetups.find((meetup) => {
+        return state.cheques.find((meetup) => {
           return meetup.id === meetupId
         })
       }

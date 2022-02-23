@@ -47,7 +47,7 @@ export default {
       if (this.userIsAuthenticated) {
         menuItems = [
           // {icon: 'mdi-cash', title: 'Cheques', link: '/cheques'},
-          {icon: 'mdi-new-box', title: 'Nuevo', link: '/cheque/nuevo'},
+          // {icon: 'mdi-new-box', title: 'Nuevo', link: '/cheque/nuevo'},
         ]
       }
       return menuItems
