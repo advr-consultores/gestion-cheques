@@ -4,7 +4,7 @@
       <v-card-title>
         {{ cheque.nombre }}
         <v-spacer />
-        <FormularioAgregarRecibo :id="id" v-if="false"/>
+        <FormularioAgregarRecibo :id="id"/>
       </v-card-title>
       <v-img :src="cheque.imagenURL" height="400px"></v-img>
       <v-card-text>
