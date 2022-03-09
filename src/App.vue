@@ -2,7 +2,6 @@
   <v-app>
     <div>
       <v-toolbar dark class="primary">
-        <v-app-bar-nav-icon @click="sideNav = !sideNav" ></v-app-bar-nav-icon>
         <v-toolbar-title>
           <router-link to="/" tag="span" style="cursor: pointer">Cheque</router-link>
         </v-toolbar-title>
@@ -34,11 +33,6 @@
 
 export default {
   name: 'App',
-
-  data: () => ({
-    sideNav: false
-  }),
-
   computed: {
     menuItems () {
       let menuItems = [

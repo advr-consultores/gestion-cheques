@@ -33,15 +33,17 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    listarCheques({commit}) {
+    async listarCheques({commit}) {
       const db = getDatabase()
-      get(ref(db, 'cheques')).then((data) => {
+      await get(ref(db, 'cheques')).then((data) => {
         const cheques = []
         const obj = data.val()
         for (let key in obj) {
           cheques.push({
             'id': key,
             'nombre': obj[key].nombre,
+            'estado': obj[key].estado,
+            'municipio': obj[key].municipio,
             'descripcion': obj[key].descripcion,
             'imagenURL': obj[key].imagenURL,
             'fecha': obj[key].fecha,
@@ -64,6 +66,8 @@ export default new Vuex.Store({
           cheque.push({
             'id': key,
             'nombre': obj[key].nombre,
+            'estado': obj[key].estado,
+            'municipio': obj[key].municipio,
             'descripcion': obj[key].descripcion,
             'imagenURL': obj[key].imagenURL,
             'fecha': obj[key].fecha,
@@ -80,7 +84,7 @@ export default new Vuex.Store({
         return { 'message': messageError, 'code': codeError, 'error': messageError }
       }
     },
-    async registarCheque({ commit }, { nombre, cliente, imagen, descripcion, fecha, statu }) {
+    async registarCheque({ commit, dispatch }, { nombre, cliente, estado, municipio, imagen, descripcion, fecha, statu }) {
       const db = getDatabase()
       const storage = getStorage()
       let key
@@ -89,6 +93,8 @@ export default new Vuex.Store({
       await push(ref(db, 'cheques'), { 
         'nombre': nombre,
         'cliente': cliente,
+        'estado': estado,
+        'municipio': municipio,
         'descripcion': descripcion,
         'fecha': fecha,
         'statu': statu
@@ -110,6 +116,7 @@ export default new Vuex.Store({
         const codeError = error.code
         return { 'message': messageError, 'code': codeError, 'error': messageError }
       })
+      dispatch('listarCheques')
       return { 'message': 'Cheque creado correctamente.', 'uid': key }
     },
     async actualizarCheque({ commit }, { nombre, cliente, imagenURL, descripcion, fecha, statu }) {
@@ -117,6 +124,8 @@ export default new Vuex.Store({
       await set(ref(db, 'cheques'), { 
         'nombre': nombre,
         'cliente': cliente,
+        'estado': estado,
+        'municipio': municipio,
         'descripcion': descripcion,
         'imagenURL': imagenURL,
         'fecha': fecha,
