@@ -12,13 +12,13 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA6PVuL0dHNMI-izit0MEnDa_1lgZletNo",
-  authDomain: "cheque-dbb5e.firebaseapp.com",
-  databaseURL: "https://cheque-dbb5e-default-rtdb.firebaseio.com",
-  projectId: "cheque-dbb5e",
-  storageBucket: "gs://cheque-dbb5e.appspot.com",
-  messagingSenderId: "288142005646",
-  appId: "1:288142005646:web:8d0a8b6929b0a3667b40df"
+  apiKey: "AIzaSyDNTExAc8-cRl1aBzJokUwjW5lW534sovY",
+  authDomain: "chequesadvr.firebaseapp.com",
+  projectId: "chequesadvr",
+  storageBucket: "chequesadvr.appspot.com",
+  messagingSenderId: "825162486096",
+  appId: "1:825162486096:web:46ae51a99cb5ccc6e31c55",
+  measurementId: "G-0S7RENS99H"
 };
 
 // Initialize Firebase

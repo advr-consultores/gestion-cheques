@@ -68,6 +68,17 @@
             </div>
           </v-card>
         </v-col>
+        <v-col v-if="isClientes" cols="12">
+          <v-card
+            class="mx-auto"
+            color="#1F7087"
+            dark
+          >
+            <v-card-text>
+              No hay cheques, de click en registrar cheque.
+            </v-card-text>
+          </v-card>
+        </v-col>
       </v-row>
     </v-container>
   </v-card>
@@ -93,6 +104,9 @@ export default {
     cheques() {
       return this.$store.getters.getCheques;
     },
+    isClientes() {
+      return !Boolean(this.$store.getters.getCheques.length);
+    }
   },
   methods: {
     async listarCheques() {
