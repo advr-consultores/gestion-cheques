@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-div>
     <v-card color="#1F7087" dark class="mx-auto">
       <v-card-title>
         {{ cheque.nombre }}
@@ -23,7 +23,7 @@
         >
       </v-card-actions>
     </v-card>
-    <v-divider></v-divider>
+    <br>
     <v-card color="#1F7087" class="mx-auto" dark v-if="cheque.statu">
       <v-card-title>Estado del cheque: {{ cheque.statu }} </v-card-title>
       <v-item-group multiple>
@@ -59,7 +59,7 @@
         <v-img :src="img" :width="width" @click="overlay = false"></v-img>
       </v-overlay>
     </div>
-  </v-container>
+  </v-div>
 </template>
 
 <script>

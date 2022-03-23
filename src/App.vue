@@ -23,9 +23,12 @@
       </v-toolbar>
     </div>
     
-    <v-main>
-      <router-view></router-view>
-    </v-main>
+      <v-main class="grey">
+    <v-container fluid>
+        <router-view></router-view>
+    </v-container>
+      </v-main>
+    
   </v-app>
 </template>
 

@@ -16,7 +16,7 @@
       </v-btn>
     </v-card-actions>
     <v-container fluid>
-      <v-row dense>
+      <v-row >
         <v-col v-for="cheque in cheques" :key="cheque.id" cols="12">
           <v-card
             v-if="statu ? cheque.statu : !cheque.statu"
