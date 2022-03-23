@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
 import { getDatabase, ref, push, get, update, set, remove } from 'firebase/database'
 import { getStorage, uploadBytes, ref as sRef, getDownloadURL, deleteObject } from 'firebase/storage'
 
@@ -33,7 +33,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async listarCheques({commit}) {
+    async listarCheques({ commit }) {
       const db = getDatabase()
       await get(ref(db, 'cheques')).then((data) => {
         const cheques = []
@@ -56,7 +56,7 @@ export default new Vuex.Store({
       }).catch((error) => { return { 'message': messageError, 'code': codeError, 'error': messageError } })
       return { 'message': 'Consulta satisfactoria.' }
     },
-    async verCheque({commit}, { uid }) {
+    async verCheque({ commit }, { uid }) {
       try {
         const db = getDatabase()
         const data = await get(ref(db, 'cheques/' + uid))
@@ -90,7 +90,7 @@ export default new Vuex.Store({
       let key
       const filename = imagen.name
       const extension = filename.slice(filename.lastIndexOf('.'))
-      await push(ref(db, 'cheques'), { 
+      await push(ref(db, 'cheques'), {
         'nombre': nombre,
         'cliente': cliente,
         'estado': estado,
@@ -121,7 +121,7 @@ export default new Vuex.Store({
     },
     async actualizarCheque({ commit }, { nombre, cliente, imagenURL, descripcion, fecha, statu }) {
       const db = getDatabase()
-      await set(ref(db, 'cheques'), { 
+      await set(ref(db, 'cheques'), {
         'nombre': nombre,
         'cliente': cliente,
         'estado': estado,
@@ -145,13 +145,13 @@ export default new Vuex.Store({
         const desertRef = sRef(storage, `cheques/${uid}.${extension}`)
         await deleteObject(desertRef)
         return { 'message': 'Eliminación exitosa' }
-      } catch(error) {
+      } catch (error) {
         const messageError = error.message
         const codeError = error.code
         return { 'message': messageError, 'code': codeError, 'error': messageError }
       }
     },
-    async subirRecibo(context, { uid, imagen, statu }){
+    async subirRecibo(context, { uid, imagen, statu }) {
       try {
         const db = getDatabase()
         const storage = getStorage()
@@ -166,13 +166,13 @@ export default new Vuex.Store({
             })
           })
         })
-      } catch(error) {
+      } catch (error) {
         const messageError = error.message
         const codeError = error.code
         return { 'message': messageError, 'code': codeError, 'error': messageError }
       }
     },
-    cerrarSesion({commit}) {
+    cerrarSesion({ commit }) {
       const auth = getAuth();
       signOut(auth).then(() => {
         commit('setUser', null)
@@ -196,16 +196,47 @@ export default new Vuex.Store({
           commit('setUser', newUser)
         }
       ).catch(error => {
-          commit('setLoading', false)
-          commit('setError', error)
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          alert('Error (autenticación/contraseña incorrecta).')
-        }
+        commit('setLoading', false)
+        commit('setError', error)
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        alert('Error (autenticación/contraseña incorrecta).')
+      }
       )
     },
-    autoSignIn ({commit}, payload) {
-      commit('setUser', {id: payload.uid, registeredMeetups: []})
+    async crearUsuario(context, { email, password }) {
+      try {
+        const auth = getAuth();
+        await createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+          }
+          )
+        return { message: 'Usuario creado.' }
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        return { message: errorMessage, error: errorCode }
+
+      }
+    },
+    async fer() {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+          const uid = user.uid;
+          // ...
+          console.log('d', uid)
+        } else {
+          // User is signed out
+          // ...
+        }
+      });
+    },
+    autoSignIn({ commit }, payload) {
+      commit('setUser', { id: payload.uid, registeredMeetups: [] })
     },
   },
   getters: {
