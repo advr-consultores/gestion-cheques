@@ -1,8 +1,7 @@
 <template>
-  <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn dark v-bind="attrs" v-on="on"> Crear Usuario </v-btn>
+        <v-btn left dark v-bind="attrs" v-on="on"> <v-icon left dark>mdi-account-plus</v-icon>Usuario </v-btn>
       </template>
       <v-card>
         <v-card-title>
@@ -52,7 +51,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-row>
+  
 </template>
 
 <script>
@@ -66,9 +65,7 @@ export default {
   }),
   computed: {
     comparePasswords() {
-      return this.password !== this.confirmPassword
-        ? "Las contraseñas no coinciden"
-        : "";
+      return this.password !== this.confirmPassword ? "Las contraseñas no coinciden" : "";
     },
   },
   methods: {

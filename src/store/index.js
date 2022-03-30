@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth'
 import { getDatabase, ref, push, get, update, set, remove } from 'firebase/database'
 import { getStorage, uploadBytes, ref as sRef, getDownloadURL, deleteObject } from 'firebase/storage'
 
@@ -11,6 +11,7 @@ export default new Vuex.Store({
   state: {
     cheques: [],
     user: null,
+    uid: null
   },
   mutations: {
     setCheques(state, payload) {
@@ -30,6 +31,9 @@ export default new Vuex.Store({
     },
     clearError(state) {
       state.error = null
+    },
+    setUidUsuario(state, uid){
+      state.uid= uid
     }
   },
   actions: {
@@ -117,7 +121,7 @@ export default new Vuex.Store({
         return { 'message': messageError, 'code': codeError, 'error': messageError }
       })
       dispatch('listarCheques')
-      return { 'message': 'Cheque creado correctamente.', 'uid': key }
+      return { 'message': 'Cheque creado correctamente.', 'uid': key, error:null }
     },
     async actualizarCheque({ commit }, { nombre, cliente, imagenURL, descripcion, fecha, statu }) {
       const db = getDatabase()
@@ -137,7 +141,7 @@ export default new Vuex.Store({
       })
       return { 'message': 'Cheque actulizado correctamente.' }
     },
-    async eliminarCheque({ commit }, { uid, extension }) {
+    async eliminarCheque(context, { uid, extension }) {
       try {
         const db = getDatabase()
         await remove(ref(db, 'cheques/' + uid))
@@ -211,7 +215,7 @@ export default new Vuex.Store({
           .then((userCredential) => {
             const user = userCredential.user;
           }
-          )
+        )
         return { message: 'Usuario creado.' }
       } catch (error) {
         const errorCode = error.code;
@@ -220,21 +224,22 @@ export default new Vuex.Store({
 
       }
     },
-    async fer() {
-      const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          // User is signed in, see docs for a list of available properties
-          // https://firebase.google.com/docs/reference/js/firebase.User
-          const uid = user.uid;
-          // ...
-          console.log('d', uid)
-        } else {
-          // User is signed out
-          // ...
-        }
-      });
-    },
+    // async uidUsuario({commit}){
+    //   const auth = getAuth();
+    //   onAuthStateChanged(auth, (user) => {
+    //     if (user) {
+    //       // User is signed in, see docs for a list of available properties
+    //       // https://firebase.google.com/docs/reference/js/firebase.User
+    //       const uid = user.uid;
+    //       commit('setUidUsuario', uid)
+    //       return { message: 'Consulta satisfactoria.', uid: uid }
+    //     } else {
+    //       // User is signed out
+    //       // ...
+    //       return { message: 'No ha iniciado cesión.', error: 'bad'}
+    //     }
+    //   });
+    // },
     autoSignIn({ commit }, payload) {
       commit('setUser', { id: payload.uid, registeredMeetups: [] })
     },
@@ -252,8 +257,7 @@ export default new Vuex.Store({
         })
       }
     },
-    user(state) {
-      return state.user
-    }
+    user: (state) => state.user,
+    getUid: (state) => state.user.id
   }
 })

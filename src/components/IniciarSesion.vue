@@ -11,7 +11,7 @@
         />
         <v-text-field
           name="password"
-          label="Password"
+          label="Contraseña"
           id="password"
           v-model="password"
           type="password"

@@ -8,10 +8,14 @@
         <form @submit.prevent="crearCheque()">
           <v-text-field label="Nombre del cheque" v-model="nombre" required />
 
-          <v-text-field label="Cliente" v-model="cliente" required />
-
+          <v-autocomplete
+            v-model="cliente"
+            :items="clientes"
+            clearable
+            label="Cliente"
+          />
           <SeleccionarEstadosMunicipio
-            @eventEstadoMunicipio = "setstadoMunicipio"
+            @eventEstadoMunicipio="setstadoMunicipio"
           />
 
           <v-file-input
@@ -21,6 +25,7 @@
             @click="imagenSeleccionada"
           />
           <input
+            required
             type="file"
             style="display: none"
             ref="archivoEntrada"
@@ -50,7 +55,8 @@ export default {
   data() {
     return {
       nombre: "",
-      cliente: "",
+      cliente: null,
+      clientes: ["BBVA", "Scotiabank", "Movistar", "Banamex"],
       imagen: null,
       descripcion: "",
       rules: [
@@ -79,6 +85,11 @@ export default {
     formIsValid() {
       return this.nombre !== "" && this.cliente !== "" && this.imagen !== "";
     },
+    reglaImagen() {
+      if (this.imagen != null) {
+        return "Seleccione una imagen";
+      } else null;
+    },
   },
   methods: {
     async crearCheque() {
@@ -86,9 +97,11 @@ export default {
         return;
       }
       if (!this.imagen) {
+        alert("Seleccione una imagen.");
         return;
       }
-      const { nombre, cliente, imagen, descripcion, statu, estado, municipio } = this;
+      const { nombre, cliente, imagen, descripcion, statu, estado, municipio } =
+        this;
       const fecha = new Date(
         new Date().getTime() - new Date().getTimezoneOffset() * 60000
       );
@@ -107,12 +120,12 @@ export default {
         "registarCheque",
         cheque
       );
-      if (error) {
+      if (uid) {
         alert(message);
-        return;
+        this.$router.push("/cheque/" + uid);
+      } else {
+        alert("No se pudo crear el cheque.");
       }
-      alert(message);
-      this.$router.push("/cheque/" + uid);
     },
     imagenSeleccionada() {
       this.$refs.archivoEntrada.click();
@@ -130,10 +143,10 @@ export default {
       fileReader.readAsDataURL(files[0]);
       this.imagen = files[0];
     },
-    setstadoMunicipio ( { estado, municipio }) {
-      this.estado = estado
-      this.municipio = municipio
-    }
+    setstadoMunicipio({ estado, municipio }) {
+      this.estado = estado;
+      this.municipio = municipio;
+    },
   },
 };
 </script>

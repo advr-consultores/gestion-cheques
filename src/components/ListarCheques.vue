@@ -53,18 +53,19 @@
                   @click="(overlay = !overlay), (img = cheque.imagenURL), (width = 200)"
                 />
               </v-avatar>
-              <div class="d-flex flex-column justify-space-between ">
                 <v-overlay :z-index="zIndex" :value="overlay">
-                  <v-slider
-                    v-model="width"
-                    class="align-self-stretch"
-                    min="200"
-                    max="500"
-                    step="1"
-                  />
-                  <v-img :src="img" :width="width" @click="overlay = false" />
+                  
+                    <v-slider
+                      v-model="width"
+                      class="align-self-stretch"
+                      min="200"
+                      max="500"
+                      step="1"
+                    />
+                  <div class="d-flex flex-column justify-space-between">
+                    <v-img :src="img" :width="width" @click="overlay = false" />
+                  </div>
                 </v-overlay>
-              </div>
             </div>
           </v-card>
         </v-col>
@@ -106,7 +107,7 @@ export default {
     },
     isClientes() {
       return !Boolean(this.$store.getters.getCheques.length);
-    }
+    },
   },
   methods: {
     async listarCheques() {

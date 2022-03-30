@@ -3,16 +3,11 @@
     <div>
       <v-toolbar dark class="primary">
         <v-toolbar-title>
-          <router-link to="/" tag="span" style="cursor: pointer"
-            >Cheque</router-link>
+          <router-link to="/" tag="span" style="cursor: pointer">Cheque</router-link>
         </v-toolbar-title>
         <v-spacer></v-spacer>
-          <CrearUsuario v-if="userIsAuthenticated"/>
         <v-toolbar-items>
-          <v-btn v-for="item in menuItems" :key="item.title" :to="item.link">
-            <v-icon left dark>{{ item.icon }}</v-icon>
-            {{ item.title }}
-          </v-btn>
+            <CrearUsuario v-if="userIsAuthenticated && isAdmin"/>
           <v-btn v-if="userIsAuthenticated" @click="cerrarSesion">
             <v-icon left dark>mdi-logout</v-icon>
             Salir
@@ -25,6 +20,13 @@
       <v-container fluid>
         <router-view></router-view>
       </v-container>
+      <br>
+        <v-row v-if="userIsAuthenticated" justify="space-around" >
+          <v-btn color="green" fab large dark @click="$router.go(0)"><v-icon large>
+          mdi-reload
+        </v-icon></v-btn>
+        
+        </v-row>
     </v-main>
   </v-app>
 </template>
@@ -37,22 +39,17 @@
       CrearUsuario
     },
     computed: {
-      menuItems() {
-        let menuItems = [{ icon: "mdi-login", title: "Sign in", link: "/login" }];
-        if (this.userIsAuthenticated) {
-          menuItems = [
-            // {icon: 'mdi-cash', title: 'Cheques', link: '/cheques'},
-            // {icon: 'mdi-new-box', title: 'Nuevo', link: '/cheque/nuevo'},
-          ];
-        }
-        return menuItems;
-      },
       userIsAuthenticated() {
         return (
           this.$store.getters.user !== null &&
           this.$store.getters.user !== undefined
         );
       },
+      isAdmin() {
+        if (this.$store.getters.getUid == 'DlAlG0tRo6MJH1JOb7e3kASaIOY2') {
+          return true
+        } return false
+      }
     },
     methods: {
       cerrarSesion() {

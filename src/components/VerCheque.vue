@@ -1,5 +1,5 @@
 <template>
-  <v-div>
+  <div>
     <v-card color="#1F7087" dark class="mx-auto">
       <v-card-title>
         {{ cheque.nombre }}
@@ -18,14 +18,14 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="error" @click="eliminarCheque()"
+        <v-btn class="error" @click="eliminarCheque()" :disabled="isAdmin"
           ><v-icon>mdi-delete</v-icon></v-btn
         >
       </v-card-actions>
     </v-card>
     <br>
     <v-card color="#1F7087" class="mx-auto" dark v-if="cheque.statu">
-      <v-card-title>Estado del cheque: {{ cheque.statu }} </v-card-title>
+      <v-card-title>Estado del cheque: {{ cheque.statu }}</v-card-title>
       <v-item-group multiple>
         <v-row no-gutters>
           <v-col>
@@ -59,7 +59,7 @@
         <v-img :src="img" :width="width" @click="overlay = false"></v-img>
       </v-overlay>
     </div>
-  </v-div>
+  </div>
 </template>
 
 <script>
@@ -87,6 +87,11 @@
       cheque() {
         return this.$store.getters.loadedMeetup(this.id);
       },
+      isAdmin() {
+        if (this.$store.getters.getUid == 'DlAlG0tRo6MJH1JOb7e3kASaIOY2') {
+          return false
+        } return true
+      }
     },
     created() {
       this.verCheque();
