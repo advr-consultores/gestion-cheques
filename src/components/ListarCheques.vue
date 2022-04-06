@@ -1,22 +1,24 @@
 <template>
   <v-card max-width="800" class="mx-auto">
     <v-card-actions>
-      <v-autocomplete
-        v-model="statu"
-        :items="status"
-        item-text="statu"
-        value="value"
-        dense
-        filled
-        label="Status"
-      />
       <v-spacer />
-      <v-btn x-large color="success" :to="'/cheque/nuevo'">
-        Registrar cheque
+      <v-btn color="success" :to="'/cheque/nuevo'">
+        <v-icon left>mdi-credit-card-plus</v-icon> cheque
       </v-btn>
     </v-card-actions>
     <v-container fluid>
-      <v-row >
+      <v-row>
+        <v-col cols="12">
+          <v-autocomplete
+            v-model="statu"
+            :items="status"
+            item-text="statu"
+            value="value"
+            dense
+            filled
+            label="Status"
+          />
+        </v-col>
         <v-col v-for="cheque in cheques" :key="cheque.id" cols="12">
           <v-card
             v-if="statu ? cheque.statu : !cheque.statu"
@@ -34,6 +36,9 @@
                   <p>{{ cheque.fecha }}</p>
                   <p>Estado: {{ cheque.estado }}</p>
                   <p>Municipio: {{ cheque.municipio }}</p>
+                  <!-- <p>Creado por: {{ getPersonalCreado(cheque.autor) }}</p>-->
+                  <!-- <p>Responsable: {{ getPersonalAcargo(cheque.usuarioCargo) }}</p>  -->
+                  <p>Sucursal: {{ cheque.sucursal }}</p>
                   <p v-if="cheque.statu">
                     Status: Concluido({{ cheque.statu }})
                   </p>
@@ -97,6 +102,7 @@ export default {
     zIndex: 0,
     img: null,
     width: 300,
+    cheque: null
   }),
   created() {
     this.listarCheques();
@@ -118,6 +124,14 @@ export default {
       }
       // alert(message);
     },
+    getPersonalAcargo(uid){
+      this.$store.dispatch('obtenerPersonalAcargo', {uid})
+      return this.$store.getters.getPersonalAcargo
+    },
+    getPersonalCreado(uid){
+      this.$store.dispatch('obtenerPersonalCreado', {uid})
+      return this.$store.getters.getPersonalCreado
+    }
   },
 };
 </script>

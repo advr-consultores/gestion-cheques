@@ -17,6 +17,10 @@
           <SeleccionarEstadosMunicipio
             @eventEstadoMunicipio="setstadoMunicipio"
           />
+          <v-text-field label="Sucursales" v-model="sucursal" required />
+          <SeleccionarUsuario
+            @eventUsuario="setUsuarioCargo"
+          />
 
           <v-file-input
             v-model="imagen"
@@ -32,7 +36,7 @@
             accept="image/png, image/jpeg, image/bmp"
             @change="imagenElegida"
           />
-          <v-img :src="imagenURL" max-height="300" max-width="600" />
+          <v-img :src="imagenURL" />
 
           <v-text-field label="Descripción" v-model="descripcion" required />
 
@@ -51,6 +55,7 @@
 
 <script>
 import SeleccionarEstadosMunicipio from "@/components/Estados.vue";
+import SeleccionarUsuario from "../components/Usuarios.vue"
 export default {
   data() {
     return {
@@ -58,7 +63,7 @@ export default {
       cliente: null,
       clientes: ["BBVA", "Scotiabank", "Movistar", "Banamex"],
       imagen: null,
-      descripcion: "",
+      descripcion: null,
       rules: [
         (value) =>
           !value ||
@@ -76,20 +81,34 @@ export default {
       imagenURL: "",
       estado: null,
       municipio: null,
+      usuarioCargo: null,
+      sucursal: null
     };
   },
   components: {
     SeleccionarEstadosMunicipio,
+    SeleccionarUsuario
   },
   computed: {
     formIsValid() {
-      return this.nombre !== "" && this.cliente !== "" && this.imagen !== "";
+      const { nombre, cliente, imagen, estado, municipio, usuario, descripcion } = this
+      return Boolean( nombre && cliente && imagen && estado && municipio && usuario && descripcion);
     },
     reglaImagen() {
       if (this.imagen != null) {
         return "Seleccione una imagen";
       } else null;
     },
+    usuario(){
+      return this.$store.getters.getUid
+    }
+  },
+  watch: {
+    imagen(val){
+      if (!Boolean(val)){
+        this.imagenURL = null
+      }
+    }
   },
   methods: {
     async crearCheque() {
@@ -100,8 +119,7 @@ export default {
         alert("Seleccione una imagen.");
         return;
       }
-      const { nombre, cliente, imagen, descripcion, statu, estado, municipio } =
-        this;
+      const { nombre, cliente, imagen, descripcion, statu, estado, municipio, sucursal, usuarioCargo, usuario } = this;
       const fecha = new Date(
         new Date().getTime() - new Date().getTimezoneOffset() * 60000
       );
@@ -115,6 +133,9 @@ export default {
         descripcion: descripcion,
         fecha: fechaConTiempo,
         statu: statu,
+        usuarioCargo: usuarioCargo,
+        autor: usuario,
+        sucursal: sucursal
       };
       const { message, uid, error } = await this.$store.dispatch(
         "registarCheque",
@@ -146,6 +167,9 @@ export default {
     setstadoMunicipio({ estado, municipio }) {
       this.estado = estado;
       this.municipio = municipio;
+    },
+    setUsuarioCargo({ usuario }) {
+      this.usuarioCargo = usuario;
     },
   },
 };

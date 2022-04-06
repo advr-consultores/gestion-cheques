@@ -32,10 +32,12 @@ new Vue({
   vuetify,
   render: h => h(App),
   created() {
-    app
+    app,
     onAuthStateChanged(auth,(user) => {
       if (user) {
-        this.$store.dispatch('autoSignIn', user)
+        if(user.emailVerified){
+          this.$store.dispatch('autoSignIn', user)
+        }
       }
     })
     this.$store.dispatch('listarCheques')

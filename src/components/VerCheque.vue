@@ -1,29 +1,44 @@
 <template>
   <div>
     <v-card color="#1F7087" dark class="mx-auto">
-      <v-card-title>
-        {{ cheque.nombre }}
+      <v-card-actions>
         <v-spacer />
-        <FormularioAgregarRecibo :id="id" />
+        <FormularioAgregarRecibo v-if="isAdmin || isAcargo" :id="id" />
+      </v-card-actions>
+      <v-card-title>
+        {{ cheque.nombre }} de la sucursal {{ cheque.sucursal }}
       </v-card-title>
       <v-img
         :src="cheque.imagenURL"
         height="400px"
         @click="setImagen(cheque.imagenURL)"
       ></v-img>
-      <v-card-text>
-        {{ cheque.cliente }} - {{ cheque.estado }} - {{ cheque.municipio }} -
-        {{ cheque.fecha }}
+      <v-card-text class="font-weight-bold">
+        <div>
+          {{ cheque.cliente }}<br />
+          {{ cheque.municipio }} ({{ cheque.estado }})<br />
+          Subido el {{ new Date(cheque.fecha).toLocaleDateString("es-ES", options) }} <br>
+          Creado por: {{ creado }} <br>
+          Responsable: {{ acargo }}
+        </div>
         <p class="text-h5 text--primary">{{ cheque.descripcion }}</p>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="error" @click="eliminarCheque()" :disabled="isAdmin"
+        <v-btn
+          class="primary"
+          :disabled="!isAdmin && !isAcargo"
+          ><v-icon>mdi-pencil</v-icon></v-btn
+        >
+        <v-btn
+          class="error"
+          @click="eliminarCheque()"
+          :disabled="!isAdmin && !isAcargo"
           ><v-icon>mdi-delete</v-icon></v-btn
         >
       </v-card-actions>
     </v-card>
-    <br>
+    <br />
     <v-card color="#1F7087" class="mx-auto" dark v-if="cheque.statu">
       <v-card-title>Estado del cheque: {{ cheque.statu }}</v-card-title>
       <v-item-group multiple>
@@ -63,75 +78,101 @@
 </template>
 
 <script>
-  import FormularioAgregarRecibo from "@/components/AgregarRecibo.vue";
+import FormularioAgregarRecibo from "@/components/AgregarRecibo.vue";
 
-  export default {
-    components: {
-      FormularioAgregarRecibo,
-    },
-    props: {
-      id: { type: String, default: "" },
-    },
-    data: () => ({
-      items: [
-        {
-          src: "backgrounds/bg.jpg",
-        },
-      ],
-      overlay: false,
-      zIndex: 0,
-      img: null,
-      width: 200,
-    }),
-    computed: {
-      cheque() {
-        return this.$store.getters.loadedMeetup(this.id);
+export default {
+  components: {
+    FormularioAgregarRecibo,
+  },
+  props: {
+    id: { type: String, default: "" },
+  },
+  data: () => ({
+    items: [
+      {
+        src: "backgrounds/bg.jpg",
       },
-      isAdmin() {
-        if (this.$store.getters.getUid == 'DlAlG0tRo6MJH1JOb7e3kASaIOY2') {
-          return false
-        } return true
+    ],
+    overlay: false,
+    zIndex: 0,
+    img: null,
+    width: 200,
+    personal:null,
+    options: {weekday: "long", year: "numeric", month: "long", day: "numeric"}
+  }),
+  computed: {
+    cheque() {
+      return this.$store.getters.loadedMeetup(this.id);
+    },
+    isAdmin() {
+      return this.$store.getters.isAdmin;
+    },
+    isAcargo() {
+      if (this.$store.getters.getUid == this.cheque.usuarioCargo) {
+        return true;
+      }
+      return false;
+    },
+    creado(){
+      const { cheque } = this
+      this.getPersonalCreado(cheque.autor)
+      return this.$store.getters.getPersonalCreado
+    },
+    acargo(){
+      const { cheque } = this
+      this.getPersonalAcargo(cheque.usuarioCargo)
+      return this.$store.getters.getPersonalAcargo
+    }
+  },
+  created() {
+    this.verCheque();
+  },
+  methods: {
+    async verCheque() {
+      const { id } = this;
+      const { message, error } = await this.$store.dispatch("verCheque", {
+        uid: id,
+      });
+      if (error) {
+        alert(message);
+        return;
       }
     },
-    created() {
-      this.verCheque();
-    },
-    methods: {
-      async verCheque() {
-        const { id } = this;
-        const { message, error } = await this.$store.dispatch("verCheque", {
-          uid: id,
-        });
+    async eliminarCheque() {
+      let isEliminar = confirm("Estas a punto de eliminar este cheque.");
+      console.log(isEliminar);
+      if (isEliminar) {
+        const { id, cheque } = this;
+        const extensionFile =
+          cheque.imagenURL.match(/.*\/([^/]+)\.([^?]+)/i)[2];
+        const { message, error } = await this.$store.dispatch(
+          "eliminarCheque",
+          {
+            uid: id,
+            extension: extensionFile,
+          }
+        );
         if (error) {
           alert(message);
           return;
         }
-      },
-      async eliminarCheque() {
-        let isEliminar = confirm('Estas a punto de eliminar este cheque.')
-        console.log(isEliminar)
-        if (isEliminar){
-          const { id, cheque } = this;
-          const extensionFile = cheque.imagenURL.match(/.*\/([^/]+)\.([^?]+)/i)[2];
-          const { message, error } = await this.$store.dispatch("eliminarCheque", {
-            uid: id,
-            extension: extensionFile,
-          });
-          if (error) {
-            alert(message);
-            return;
-          }
-          alert(message);
-          this.$router.push('/')
-        }
-      },
-      setImagen(val) {
-        if (Boolean(val)) {
-          this.img = val;
-          this.overlay = !this.overlay;
-          this.width = 200
-        }
-      },
+        alert(message);
+        this.$router.push("/");
+      }
     },
-  };
+    setImagen(val) {
+      if (Boolean(val)) {
+        this.img = val;
+        this.overlay = !this.overlay;
+        this.width = 200;
+      }
+    },
+    async getPersonalAcargo(uid){
+      await this.$store.dispatch('obtenerPersonalAcargo', {uid})
+    },
+    async getPersonalCreado(uid){
+      await this.$store.dispatch('obtenerPersonalCreado', {uid})
+    }
+  },
+};
 </script>

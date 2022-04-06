@@ -7,9 +7,11 @@ import Cheques from '../views/Cheque.vue'
 import NuevoCheque from '../components/NuevoCheque.vue'
 import VerCheque from '../components/VerCheque.vue'
 import IniciarSesion from '../components/IniciarSesion.vue'
+import Usuario from '../views/Usuario.vue'
+import send from '../views/send.vue'
 
 const enterIfUserAutenticado = (to, from, next) => {
-  if (store.getters.user) {
+  if (store.getters.getIfUsuarioAuth) {
     next()
   } else {
     next('/login')
@@ -53,6 +55,17 @@ const routes = [
     beforeEnter: enterIfUserAutenticado
   },
   {
+    path: '/usuarios/',
+    name: 'Usuarios',
+    component: Usuario,
+    beforeEnter: enterIfUserAutenticado
+  },
+  // {
+  //   path: '/send',
+  //   name: 'send',
+  //   component: send,
+  // },
+  {
     path: '/login',
     name: 'Login',
     component: IniciarSesion
@@ -60,9 +73,9 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  routes,
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
 })
 
 export default router

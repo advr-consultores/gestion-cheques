@@ -2,7 +2,7 @@
   <v-card class="mx-auto" max-width="500">
     <v-card-title>Iniciar sesión en ADVR Cheques</v-card-title>
     <v-card-text>
-      <form @submit.prevent="onSignin">
+      <form @submit.prevent="onSignin()">
         <v-text-field
           label="Correo electronico"
           v-model="email"
@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     user() {
-      return this.$store.getters.user;
+      return this.$store.getters.getIfUsuarioAuth;
     },
     error() {
       return this.$store.getters.error;
@@ -54,20 +54,22 @@ export default {
   },
   watch: {
     user(value) {
-      if (value !== null && value !== undefined) {
-        this.$router.push("/");
+      if (value) {
+        this.$router.push('/');
       }
     },
   },
   methods: {
-    onSignin() {
-      this.$store.dispatch("iniciarSesion", {
+    async onSignin() {
+      const { message, error } = await this.$store.dispatch("iniciarSesion", {
         email: this.email,
         password: this.password,
       });
-    },
-    onDismissed() {
-      this.$store.dispatch("clearError");
+      if (error){
+        alert(message)
+        return
+      }
+      alert(message)
     },
   },
 };

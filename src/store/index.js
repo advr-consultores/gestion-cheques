@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider } from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 import { getDatabase, ref, push, get, update, set, remove } from 'firebase/database'
 import { getStorage, uploadBytes, ref as sRef, getDownloadURL, deleteObject } from 'firebase/storage'
 
@@ -10,8 +10,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     cheques: [],
-    user: null,
-    uid: null
+    user: { accessToken: null, uid: null },
+    uid: null,
+    usuarios: [],
+    personalAcargo: null,
+    personalCreado: null
   },
   mutations: {
     setCheques(state, payload) {
@@ -23,6 +26,9 @@ export default new Vuex.Store({
     setUser(state, payload) {
       state.user = payload
     },
+    setUsers(state, payload) {
+      state.usuarios = payload
+    },
     setLoading(state, payload) {
       state.loading = payload
     },
@@ -32,8 +38,14 @@ export default new Vuex.Store({
     clearError(state) {
       state.error = null
     },
-    setUidUsuario(state, uid){
-      state.uid= uid
+    setUidUsuario(state, uid) {
+      state.uid = uid
+    },
+    setPersonalAcargo(state, personal) {
+      state.personalAcargo = personal
+    },
+    setPersonalCreado(state, personal) {
+      state.personalCreado = personal
     }
   },
   actions: {
@@ -54,10 +66,17 @@ export default new Vuex.Store({
             'cliente': obj[key].cliente,
             'recibo': obj[key].recibo,
             'statu': obj[key].statu,
+            'sucursal': obj[key].sucursal,
+            'usuarioCargo': obj[key].usuarioCargo,
+            'autor': obj[key].autor
           })
         }
         commit('setCheques', cheques)
-      }).catch((error) => { return { 'message': messageError, 'code': codeError, 'error': messageError } })
+      }).catch((error) => {
+        const messageError = error.message
+        const codeError = error.code
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
+      })
       return { 'message': 'Consulta satisfactoria.' }
     },
     async verCheque({ commit }, { uid }) {
@@ -78,6 +97,9 @@ export default new Vuex.Store({
             'cliente': obj[key].cliente,
             'recibo': obj[key].recibo,
             'statu': obj[key].statu,
+            'usuarioCargo': obj[key].usuarioCargo,
+            'autor': obj[key].autor,
+            'sucursal': obj[key].sucursal
           })
         }
         commit('setCheque', cheque)
@@ -88,7 +110,7 @@ export default new Vuex.Store({
         return { 'message': messageError, 'code': codeError, 'error': messageError }
       }
     },
-    async registarCheque({ commit, dispatch }, { nombre, cliente, estado, municipio, imagen, descripcion, fecha, statu }) {
+    async registarCheque({ commit, dispatch }, { nombre, cliente, estado, municipio, sucursal, imagen, descripcion, fecha, statu, usuarioCargo, autor }) {
       const db = getDatabase()
       const storage = getStorage()
       let key
@@ -101,7 +123,10 @@ export default new Vuex.Store({
         'municipio': municipio,
         'descripcion': descripcion,
         'fecha': fecha,
-        'statu': statu
+        'statu': statu,
+        'usuarioCargo': usuarioCargo,
+        'autor': autor,
+        'sucursal': sucursal
       }).then((data) => {
         key = data.key
         return key
@@ -121,7 +146,7 @@ export default new Vuex.Store({
         return { 'message': messageError, 'code': codeError, 'error': messageError }
       })
       dispatch('listarCheques')
-      return { 'message': 'Cheque creado correctamente.', 'uid': key, error:null }
+      return { 'message': 'Cheque creado correctamente.', 'uid': key, error: null }
     },
     async actualizarCheque({ commit }, { nombre, cliente, imagenURL, descripcion, fecha, statu }) {
       const db = getDatabase()
@@ -179,69 +204,136 @@ export default new Vuex.Store({
     cerrarSesion({ commit }) {
       const auth = getAuth();
       signOut(auth).then(() => {
-        commit('setUser', null)
+        commit('setUser', { accessToken: null, uid: null })
       }).catch((error) => {
         const errorMessage = error.message
         alert(errorMessage)
       });
     },
-    iniciarSesion({ commit }, payload) {
-      const auth = getAuth();
-      const { email, password } = payload
-      commit('setLoading', true)
-      commit('clearError')
-      signInWithEmailAndPassword(auth, email, password).then(
-        user => {
-          commit('setLoading', false)
+    async iniciarSesion({ commit, dispatch }, { email, password }) {
+      try {
+        const auth = getAuth();
+        const { user } = await signInWithEmailAndPassword(auth, email, password)
+        if (auth.currentUser.emailVerified) {
           const newUser = {
             id: user.uid,
-            registeredMeetups: []
+            accessToken: user.accessToken
           }
-          commit('setUser', newUser)
+          return { message: 'Inicio de cesión exitoso.' }
         }
-      ).catch(error => {
-        commit('setLoading', false)
-        commit('setError', error)
+        dispatch('cerrarSesion')
+        return { message: 'No se ha verificado su correo.', error: 'Error (autenticación/verificacion).' }
+      } catch (error) {
         const errorCode = error.code;
         const errorMessage = error.message;
-        alert('Error (autenticación/contraseña incorrecta).')
+        return { message: 'Error (autenticación/contraseña incorrecta).', error: errorCode }
       }
-      )
     },
-    async crearUsuario(context, { email, password }) {
+    async crearUsuarioEmailPassword({ dispatch }, { email, password, nombre, administrador }) {
       try {
         const auth = getAuth();
         await createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-          }
-        )
-        return { message: 'Usuario creado.' }
+        const { messageVerificacion, errorVerificacion } = await dispatch('enviarCorreoVerificacion')
+        const { currentUser } = auth
+        const { messageDatabase, errorDatabase } = await dispatch('crearUsuario', { uid: currentUser.uid, administrador, nombre, email })
+        return {
+          message: 'Usuario creado con email',
+          messageVerificacion: messageVerificacion,
+          errorVerification: errorVerificacion,
+          messageDatabase: messageDatabase,
+          errorDatabase: errorDatabase
+        }
       } catch (error) {
         const errorCode = error.code;
         const errorMessage = error.message;
         return { message: errorMessage, error: errorCode }
-
       }
     },
-    // async uidUsuario({commit}){
-    //   const auth = getAuth();
-    //   onAuthStateChanged(auth, (user) => {
-    //     if (user) {
-    //       // User is signed in, see docs for a list of available properties
-    //       // https://firebase.google.com/docs/reference/js/firebase.User
-    //       const uid = user.uid;
-    //       commit('setUidUsuario', uid)
-    //       return { message: 'Consulta satisfactoria.', uid: uid }
-    //     } else {
-    //       // User is signed out
-    //       // ...
-    //       return { message: 'No ha iniciado cesión.', error: 'bad'}
-    //     }
-    //   });
-    // },
-    autoSignIn({ commit }, payload) {
-      commit('setUser', { id: payload.uid, registeredMeetups: [] })
+    async obtenerUsuario(context) {
+      try {
+        const auth = getAuth();
+        const { currentUser } = auth
+        const db = getDatabase()
+        const data = await get(ref(db, 'usuarios/' + currentUser.uid))
+        const objUsuario = data.val()
+        return { username: objUsuario.username, administrador: objUsuario.administrador }
+      } catch (error) {
+        const messageError = error.message
+        const codeError = error.code
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
+      }
+    },
+    async obtenerPersonalAcargo({ commit }, { uid }) {
+      try {
+        const db = getDatabase()
+        const data = await get(ref(db, 'usuarios/' + uid))
+        const objUsuario = data.val()
+        commit('setPersonalAcargo', objUsuario.username)
+      } catch (error) {
+        commit('setPersonalAcargo', 'Anonimo')
+      }
+    },
+    async obtenerPersonalCreado({ commit }, { uid }) {
+      try {
+        const db = getDatabase()
+        const data = await get(ref(db, 'usuarios/' + uid))
+        const objUsuario = data.val()
+        commit('setPersonalCreado', objUsuario.username)
+      } catch (error) {
+        commit('setPersonalCreado', 'Anonimo')
+      }
+    },
+    async obtenerUsuarios({ commit }) {
+      try {
+        const db = getDatabase()
+        const data = await get(ref(db, 'usuarios'))
+        const objUsuarios = data.val()
+        const usuarios = []
+        for (let key in objUsuarios) {
+          usuarios.push({
+            id: key,
+            administrador: objUsuarios[key].administrador,
+            email: objUsuarios[key].email,
+            username: objUsuarios[key].username
+          })
+        }
+        commit('setUsers', usuarios)
+        return { message: 'Consulta satisfactoria' }
+      } catch (error) {
+        const messageError = error.message
+        const codeError = error.code
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
+      }
+    },
+    async crearUsuario(context, usuario) {
+      try {
+        const db = getDatabase();
+        await set(ref(db, 'usuarios/' + usuario.uid), {
+          username: usuario.nombre,
+          email: usuario.email,
+          administrador: usuario.administrador
+        });
+        return { messageDatabase: 'Usuario creado.' }
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        return { messageDatabase: errorMessage, errorDatabase: errorCode }
+      }
+    },
+    async enviarCorreoVerificacion(context) {
+      const auth = getAuth();
+      try {
+        await sendEmailVerification(auth.currentUser)
+        return { messageVerificacion: 'Se envió un correo de verificación.' }
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        return { messageVerificacion: errorMessage, errorVerificacion: errorCode }
+      }
+    },
+    async autoSignIn({ commit, dispatch }, { uid, accessToken }) {
+      const { username, administrador } = await dispatch('obtenerUsuario')
+      commit('setUser', { uid, accessToken, username, administrador })
     },
   },
   getters: {
@@ -257,7 +349,11 @@ export default new Vuex.Store({
         })
       }
     },
-    user: (state) => state.user,
-    getUid: (state) => state.user.id
+    getUid: (state) => state.user.uid,
+    getIfUsuarioAuth: (state) => Boolean(state.user.accessToken),
+    isAdmin: (state) => state.user.administrador,
+    getUsuarios: (state) => state.usuarios,
+    getPersonalAcargo: (state) => state.personalAcargo,
+    getPersonalCreado: (state) => state.personalCreado
   }
 })

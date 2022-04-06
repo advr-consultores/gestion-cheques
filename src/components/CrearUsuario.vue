@@ -1,7 +1,7 @@
 <template>
-    <v-dialog v-model="dialog" persistent max-width="600px">
+    <v-dialog v-model="dialog" persistent max-width="500px">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn left dark v-bind="attrs" v-on="on"> <v-icon left dark>mdi-account-plus</v-icon>Usuario </v-btn>
+        <v-btn left dark v-bind="attrs" v-on="on"> <v-icon dark>mdi-account-plus</v-icon></v-btn>
       </template>
       <v-card>
         <v-card-title>
@@ -11,6 +11,13 @@
           <v-container fluid>
             <v-form ref="form" v-model="valid" lazy-validation>
               <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="nombre"
+                    label="Nombre*"
+                    required
+                  ></v-text-field>
+                </v-col>
                 <v-col cols="12">
                   <v-text-field
                     v-model="email"
@@ -36,17 +43,23 @@
                     :rules="[comparePasswords]"
                   ></v-text-field>
                 </v-col>
+                <v-col cols="12">
+                  <v-checkbox
+                    v-model="administrador"
+                    :label="`Administrador: ${administrador ? 'Si': 'No'}`"
+                  ></v-checkbox>
+                </v-col>
               </v-row>
             </v-form>
           </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="dialog = false">
-            Close
+          <v-btn color="error darken-1"  @click="dialog = false">
+            Cancelar
           </v-btn>
-          <v-btn :disabled="false" color="blue darken-1" text @click="validate">
-            Save
+          <v-btn :disabled="nombre != null && password!=null && password == confirmPassword && email != null ? false: true" color="blue darken-1" @click="validate">
+            Guardar
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -62,6 +75,8 @@ export default {
     email: null,
     password: null,
     confirmPassword: null,
+    nombre: null,
+    administrador: false,
   }),
   computed: {
     comparePasswords() {
@@ -71,9 +86,9 @@ export default {
   methods: {
     async validate() {
       if (this.comparePasswords != "Las contraseñas no coinciden"){
-        const { email, password } = this;
-        const usuario = { email: email, password: password };
-        const { message, error } = await this.$store.dispatch("crearUsuario", usuario);
+        const { email, password, nombre, administrador } = this;
+        const usuario = { email: email, password: password, nombre: nombre, administrador: administrador };
+        const { message, error } = await this.$store.dispatch("crearUsuarioEmailPassword", usuario);
         if (error) {
           alert(message);
           return;

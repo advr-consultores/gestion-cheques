@@ -7,7 +7,10 @@
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-            <CrearUsuario v-if="userIsAuthenticated && isAdmin"/>
+          <v-btn v-if="userIsAuthenticated && isAdmin" @click="$router.push({name: 'Usuarios'})">
+            <v-icon left dark>mdi-account-outline</v-icon>
+            Usuario
+          </v-btn>
           <v-btn v-if="userIsAuthenticated" @click="cerrarSesion">
             <v-icon left dark>mdi-logout</v-icon>
             Salir
@@ -32,29 +35,20 @@
 </template>
 
 <script>
-  import CrearUsuario from "./components/CrearUsuario.vue";
   export default {
     name: "App",
-    components: {
-      CrearUsuario
-    },
     computed: {
-      userIsAuthenticated() {
-        return (
-          this.$store.getters.user !== null &&
-          this.$store.getters.user !== undefined
-        );
-      },
-      isAdmin() {
-        if (this.$store.getters.getUid == 'DlAlG0tRo6MJH1JOb7e3kASaIOY2') {
-          return true
-        } return false
-      }
+      userIsAuthenticated(){ return this.$store.getters.getIfUsuarioAuth },
+      isAdmin(){ return this.$store.getters.isAdmin }
+      
     },
     methods: {
       cerrarSesion() {
         this.$store.dispatch("cerrarSesion");
         this.$router.push("/login");
+      },
+      cerrarSesions() {
+        this.$store.dispatch("send", {email: 'davidflorescheques@gmail.com'});
       },
     },
   };
