@@ -14,7 +14,8 @@ export default new Vuex.Store({
     uid: null,
     usuarios: [],
     personalAcargo: null,
-    personalCreado: null
+    personalCreado: null,
+    comentarios: []
   },
   mutations: {
     setCheques(state, payload) {
@@ -31,6 +32,12 @@ export default new Vuex.Store({
     },
     setLoading(state, payload) {
       state.loading = payload
+    },
+    setComentario(state, payload){
+      state.comentarios.push(payload)
+    },
+    setComentarios(state, payload){
+      state.comentarios = payload
     },
     setError(state, payload) {
       state.error = payload
@@ -148,17 +155,32 @@ export default new Vuex.Store({
       dispatch('listarCheques')
       return { 'message': 'Cheque creado correctamente.', 'uid': key, error: null }
     },
-    async actualizarCheque({ commit }, { nombre, cliente, imagenURL, descripcion, fecha, statu }) {
+    async actualizarCheque({ commit }, { uid, nombre, cliente, estado, municipio, imagen, imagenURL, descripcion, statu, usuarioCargo, sucursal }) {
       const db = getDatabase()
-      await set(ref(db, 'cheques'), {
+      await update(ref(db, 'cheques/' + uid), {
         'nombre': nombre,
         'cliente': cliente,
         'estado': estado,
         'municipio': municipio,
         'descripcion': descripcion,
         'imagenURL': imagenURL,
-        'fecha': fecha,
-        'statu': statu
+        'statu': statu,
+        'usuarioCargo': usuarioCargo,
+        'sucursal': sucursal
+      }).then(()=> {
+        if(imagen != null){
+          const filename = imagen.name
+          const extension = filename.slice(filename.lastIndexOf('.'))
+          const imagenURL = imagen
+          const spaceRef = sRef(storage, 'cheques/' + uid + extension)
+          uploadBytes(spaceRef, imagenURL).then((snapshot) => {
+            getDownloadURL(snapshot.ref).then((url) => {
+              update(ref(db, 'cheques/' + uid), {
+                'imagenURL': url
+              })
+            })
+          })
+        }
       }).catch((error) => {
         const messageError = error.message
         const codeError = error.code
@@ -199,6 +221,43 @@ export default new Vuex.Store({
         const messageError = error.message
         const codeError = error.code
         return { 'message': messageError, 'code': codeError, 'error': messageError }
+      }
+    },
+    async obtenerComentarios({commit}, comentario) {
+      try {
+        const db = getDatabase()
+        const data = await get(ref(db, 'comentarios/' + comentario.cheque))
+        const objComentarios = data.val()
+        const comentarios = []
+        for (let key in objComentarios) {
+          comentarios.push({
+            'id': key,
+            'usuario': objComentarios[key].usuario,
+            'texto': objComentarios[key].texto,
+          })
+        }
+        commit('setComentarios', comentarios)
+        return { message: 'Consulta satisfactoria.' }
+      } catch (error) {
+        const messageError = error.message
+        const codeError = error.code
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
+      }
+    },
+    async crearComentario({commit}, comentario) {
+      try {
+        const { idCheque,id,usuario,texto } = comentario
+        const db = getDatabase();
+        await set(ref(db, 'comentarios/' + idCheque + '/' + id), {
+          usuario: usuario,
+          texto: texto,
+        });
+        commit('setComentario', { id, usuario, texto })
+        return { messageDatabase: 'Comentario agregados.' }
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        return { messageDatabase: errorMessage, errorDatabase: errorCode }
       }
     },
     cerrarSesion({ commit }) {
@@ -352,8 +411,10 @@ export default new Vuex.Store({
     getUid: (state) => state.user.uid,
     getIfUsuarioAuth: (state) => Boolean(state.user.accessToken),
     isAdmin: (state) => state.user.administrador,
+    getNombreUsuario:(state) => state.user.username,
     getUsuarios: (state) => state.usuarios,
     getPersonalAcargo: (state) => state.personalAcargo,
-    getPersonalCreado: (state) => state.personalCreado
+    getPersonalCreado: (state) => state.personalCreado,
+    getComentarios:(state) => state.comentarios
   }
 })

@@ -14,7 +14,7 @@
     <v-col cols="12" sm="12">
       <v-autocomplete
         v-model="municipio"
-        :items="municipios[estado]"
+        :items="municipios[estadoSeleccionado]"
         item-text="nombre"
         item-value="nombre"
         clearable
@@ -27,9 +27,12 @@
 
 <script>
 export default {
+  props: {
+    id: { type: String, default: '' }
+  },
   data: () => ({
-    estado: null,
-    municipio: null,
+    estadoSeleccionado: null,
+    municipioSeleccionado: null,
     estados: [
       { clave: "AGS", nombre: "Aguascalientes" },
       { clave: "BC", nombre: "Baja California" },
@@ -2595,12 +2598,43 @@ export default {
       ],
     },
   }),
-  watch: {
-    estado(val) {
-      this.$emit('eventEstadoMunicipio', { 'estado': val, 'municipio': this.municipio })
+  computed: {
+    cheque() {
+      if(this.id){
+        return this.$store.getters.loadedMeetup(this.id);
+      } return null
     },
-    municipio(val) {
-      this.$emit('eventEstadoMunicipio', { 'estado': this.estado, 'municipio': val })
+    estado: {
+      set(newValue){
+        if (newValue != null) { this.estadoSeleccionado = newValue }
+        else { this.estadoSeleccionado = '' }
+      },
+      get(){
+        if (this.cheque != null){
+          this.estadoSeleccionado = this.cheque.estado
+          return this.cheque.estado
+        } else { return '' }
+      }
+    },
+    municipio: {
+      set(newValue){
+        if(newValue != null){ this.municipioSeleccionado = newValue }
+        else { this.municipioSeleccionado = '' }
+      },
+      get(){
+        if (this.cheque != null){
+          this.municipioSeleccionado = this.cheque.municipio
+          return this.cheque.municipio
+        } else { return '' }
+      }
+    }
+  },
+  watch: {
+    estadoSeleccionado(val) {
+      this.$emit('eventEstadoMunicipio', { estado: val, municipio: '' })
+    },
+    municipioSeleccionado(val) {
+      this.$emit('eventEstadoMunicipio', { estado: this.estadoSeleccionado, municipio: val })
     }
   }
 };

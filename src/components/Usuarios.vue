@@ -8,7 +8,7 @@
         item-value="id"
         clearable
         no-data-text="No se encontró ningún usuario."
-        label="Seleccionar usuario"
+        label="Usuarios"
         item-disabled="administrador"
       />
     </v-col>
@@ -17,10 +17,29 @@
 
 <script>
 export default {
+  props: {
+    id: { type: String, default: '' }
+  },
   data: () => ({
-    usuario: null,
+    usuarioSeleccionado: null,
   }),
   computed: {
+    cheque() {
+      if(this.id){
+        return this.$store.getters.loadedMeetup(this.id);
+      } return null
+    },
+    usuario: {
+      set(newValue){
+        this.usuarioSeleccionado = newValue
+      },
+      get(){
+        if (this.cheque != null){
+          this.usuarioSeleccionado = this.cheque.usuarioCargo
+          return this.cheque.usuarioCargo
+        } return null
+      }
+    },
     usuarios() { return this.$store.getters.getUsuarios }
   },
   created(){
@@ -32,7 +51,7 @@ export default {
     }
   },
   watch: {
-    usuario(val) {
+    usuarioSeleccionado(val) {
       this.$emit('eventUsuario', { 'usuario': val })
     },
   }

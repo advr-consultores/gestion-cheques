@@ -25,11 +25,14 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn
-          class="primary"
-          :disabled="!isAdmin && !isAcargo"
-          ><v-icon>mdi-pencil</v-icon></v-btn
-        >
+        
+        <ActualizarCheque
+          :id="id"
+          :cliente="cheque.cliente"
+          :nombre="cheque.nombre"
+          :descripcion="cheque.descripcion"
+          :imagenURL="cheque.imagenURL" />
+        <Comentarios :idCheque="id" />
         <v-btn
           class="error"
           @click="eliminarCheque()"
@@ -79,10 +82,13 @@
 
 <script>
 import FormularioAgregarRecibo from "@/components/AgregarRecibo.vue";
-
+import Comentarios from "@/components/Comentarios.vue"
+import ActualizarCheque from '@/components/ActualizarCheque.vue'
 export default {
   components: {
     FormularioAgregarRecibo,
+    Comentarios,
+    ActualizarCheque
   },
   props: {
     id: { type: String, default: "" },

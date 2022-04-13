@@ -15,13 +15,16 @@
             label="Cliente"
           />
           <SeleccionarEstadosMunicipio
+            :id="id"
             @eventEstadoMunicipio="setstadoMunicipio"
           />
-          <v-text-field label="Sucursales" v-model="sucursal" required />
-          <SeleccionarUsuario
-            @eventUsuario="setUsuarioCargo"
+          <SucursalesCode
+            :estado="estado"
+            :municipio="municipio.toUpperCase()"
+            :id="id"
+            @eventSucursal="setSucursal"
           />
-
+          <SeleccionarUsuario :id="id" @eventUsuario="setUsuarioCargo" />
           <v-file-input
             v-model="imagen"
             prepend-icon="mdi-camera"
@@ -55,10 +58,12 @@
 
 <script>
 import SeleccionarEstadosMunicipio from "@/components/Estados.vue";
-import SeleccionarUsuario from "../components/Usuarios.vue"
+import SeleccionarUsuario from "../components/Usuarios.vue";
+import SucursalesCode from "../components/Sucursales.vue";
 export default {
   data() {
     return {
+      id: '',
       nombre: "",
       cliente: null,
       clientes: ["BBVA", "Scotiabank", "Movistar", "Banamex"],
@@ -79,36 +84,53 @@ export default {
       ],
       statu: null,
       imagenURL: "",
-      estado: null,
-      municipio: null,
+      estado: "",
+      municipio: "",
       usuarioCargo: null,
-      sucursal: null
+      sucursal: null,
     };
   },
   components: {
     SeleccionarEstadosMunicipio,
-    SeleccionarUsuario
+    SeleccionarUsuario,
+    SucursalesCode,
   },
   computed: {
     formIsValid() {
-      const { nombre, cliente, imagen, estado, municipio, usuario, descripcion } = this
-      return Boolean( nombre && cliente && imagen && estado && municipio && usuario && descripcion);
+      const {
+        nombre,
+        cliente,
+        imagen,
+        estado,
+        municipio,
+        usuario,
+        descripcion,
+      } = this;
+      return Boolean(
+        nombre &&
+          cliente &&
+          imagen &&
+          estado &&
+          municipio &&
+          usuario &&
+          descripcion
+      );
     },
     reglaImagen() {
       if (this.imagen != null) {
         return "Seleccione una imagen";
       } else null;
     },
-    usuario(){
-      return this.$store.getters.getUid
-    }
+    usuario() {
+      return this.$store.getters.getUid;
+    },
   },
   watch: {
-    imagen(val){
-      if (!Boolean(val)){
-        this.imagenURL = null
+    imagen(val) {
+      if (!Boolean(val)) {
+        this.imagenURL = null;
       }
-    }
+    },
   },
   methods: {
     async crearCheque() {
@@ -119,7 +141,18 @@ export default {
         alert("Seleccione una imagen.");
         return;
       }
-      const { nombre, cliente, imagen, descripcion, statu, estado, municipio, sucursal, usuarioCargo, usuario } = this;
+      const {
+        nombre,
+        cliente,
+        imagen,
+        descripcion,
+        statu,
+        estado,
+        municipio,
+        sucursal,
+        usuarioCargo,
+        usuario,
+      } = this;
       const fecha = new Date(
         new Date().getTime() - new Date().getTimezoneOffset() * 60000
       );
@@ -135,7 +168,7 @@ export default {
         statu: statu,
         usuarioCargo: usuarioCargo,
         autor: usuario,
-        sucursal: sucursal
+        sucursal: sucursal,
       };
       const { message, uid, error } = await this.$store.dispatch(
         "registarCheque",
@@ -170,6 +203,9 @@ export default {
     },
     setUsuarioCargo({ usuario }) {
       this.usuarioCargo = usuario;
+    },
+    setSucursal({ sucursal }) {
+      this.sucursal = sucursal;
     },
   },
 };
