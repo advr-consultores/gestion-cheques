@@ -66,7 +66,7 @@ export default {
       id: '',
       nombre: "",
       cliente: null,
-      clientes: ["BBVA", "Scotiabank", "Movistar", "Banamex"],
+      clientes: ["BBVA", ],
       imagen: null,
       descripcion: null,
       rules: [

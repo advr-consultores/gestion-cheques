@@ -1,5 +1,5 @@
 <template>
-  <v-select v-model="sucursal" :items="sucursales[estado][municipio]" label="Scursales (CR)" no-data-text="No hay inmuebles"></v-select>
+  <v-select v-model="sucursal" :items="sucursales[estado][municipio]" label="Sucursales (CR)" no-data-text="No hay inmuebles"></v-select>
 </template>
 
 <script>

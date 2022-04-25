@@ -27,6 +27,7 @@
         <v-spacer></v-spacer>
         
         <ActualizarCheque
+        v-if="false"
           :id="id"
           :cliente="cheque.cliente"
           :nombre="cheque.nombre"

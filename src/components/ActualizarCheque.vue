@@ -120,6 +120,15 @@ export default {
     usuario() {
       return this.$store.getters.getUid;
     },
+    isAdmin() {
+      return this.$store.getters.isAdmin;
+    },
+    isAcargo() {
+      if (this.$store.getters.getUid == this.usuarioCargo) {
+        return true;
+      }
+      return false;
+    },
   },
   watch: {
     imagen(val) {
