@@ -27,7 +27,7 @@
         <v-spacer></v-spacer>
         
         <ActualizarCheque
-        v-if="false"
+        v-if="true"
           :id="id"
           :cliente="cheque.cliente"
           :nombre="cheque.nombre"
@@ -147,11 +147,9 @@ export default {
     },
     async eliminarCheque() {
       let isEliminar = confirm("Estas a punto de eliminar este cheque.");
-      console.log(isEliminar);
       if (isEliminar) {
         const { id, cheque } = this;
-        const extensionFile =
-          cheque.imagenURL.match(/.*\/([^/]+)\.([^?]+)/i)[2];
+        const extensionFile = cheque.imagenURL.match(/.*\/([^/]+)\.([^?]+)/i)[2];
         const { message, error } = await this.$store.dispatch(
           "eliminarCheque",
           {

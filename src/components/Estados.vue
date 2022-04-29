@@ -2631,7 +2631,7 @@ export default {
   },
   watch: {
     estadoSeleccionado(val) {
-      this.$emit('eventEstadoMunicipio', { estado: val, municipio: '' })
+      this.$emit('eventEstadoMunicipio', { estado: val, municipio: this.municipios[val][0] })
     },
     municipioSeleccionado(val) {
       this.$emit('eventEstadoMunicipio', { estado: this.estadoSeleccionado, municipio: val })

@@ -21,6 +21,7 @@
           <SucursalesCode
             :estado="estado"
             :municipio="municipio.toUpperCase()"
+            :cliente="cliente"
             :id="id"
             @eventSucursal="setSucursal"
           />
@@ -65,8 +66,8 @@ export default {
     return {
       id: '',
       nombre: "",
-      cliente: null,
-      clientes: ["BBVA", ],
+      cliente: "",
+      clientes: ["BBVA", "CITI", "MOVISTAR", "SCOTIABANK"],
       imagen: null,
       descripcion: null,
       rules: [
