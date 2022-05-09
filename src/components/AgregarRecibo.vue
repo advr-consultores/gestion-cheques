@@ -68,7 +68,12 @@ export default {
       "Depositado",
       "Subido",
       "Cheque devuelto",
-      "Cheque dañado"
+      "Cheque dañado",
+      "Cheque depositado",
+      "Cheque enviado con guía",
+      "Cheque roto",
+      "Cheque cancelado",
+      "Cheque tiene factura"
     ],
     statu: null,
     imagen: null,

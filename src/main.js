@@ -37,9 +37,9 @@ new Vue({
       if (user) {
         if(user.emailVerified){
           this.$store.dispatch('autoSignIn', user)
+          // this.$store.dispatch('listarCheques', { autor: user.uid })
         }
       }
     })
-    this.$store.dispatch('listarCheques')
   },
 }).$mount('#app')

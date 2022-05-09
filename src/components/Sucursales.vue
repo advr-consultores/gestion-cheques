@@ -1,10 +1,20 @@
 <template>
-  <v-select
+  <!-- <v-select
     v-model="sucursal"
     :items="sucursales[estado][municipio][cliente]"
     label="Sucursales (CR)"
     no-data-text="No hay inmuebles"
-  />
+  /> -->
+  <v-autocomplete
+    v-model="sucursal"
+    :items="sucursales[estado][municipio][cliente]"
+    label="Sucursales"
+    chips
+    multiple
+    no-data-text="No se encontraron sucursales."
+  >
+
+  </v-autocomplete>
 </template>
 
 <script>

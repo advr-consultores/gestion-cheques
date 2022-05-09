@@ -6,7 +6,7 @@
         <FormularioAgregarRecibo v-if="isAdmin || isAcargo" :id="id" />
       </v-card-actions>
       <v-card-title>
-        {{ cheque.nombre }} de la sucursal {{ cheque.sucursal }}
+        {{ cheque.nombre }}
       </v-card-title>
       <v-img
         :src="cheque.imagenURL"
@@ -15,10 +15,11 @@
       ></v-img>
       <v-card-text class="font-weight-bold">
         <div>
-          {{ cheque.cliente }}<br />
-          {{ cheque.municipio }} ({{ cheque.estado }})<br />
-          Subido el {{ new Date(cheque.fecha).toLocaleDateString("es-ES", options) }} <br>
-          Creado por: {{ creado }} <br>
+          Cliente: {{ cheque.cliente }}<br />
+          Sucursal: {{ cheque.sucursal }} <br>
+          Municipio: {{ cheque.municipio }} ({{ cheque.estado }})<br />
+          Publicado: {{ cheque.fecha }} <br>
+          Autor: {{ creado }} <br>
           Responsable: {{ acargo }}
         </div>
         <p class="text-h5 text--primary">{{ cheque.descripcion }}</p>
@@ -42,7 +43,6 @@
         >
       </v-card-actions>
     </v-card>
-    <br />
     <v-card color="#1F7087" class="mx-auto" dark v-if="cheque.statu">
       <v-card-title>Estado del cheque: {{ cheque.statu }}</v-card-title>
       <v-item-group multiple>

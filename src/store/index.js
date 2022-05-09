@@ -56,35 +56,39 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async listarCheques({ commit }) {
-      const db = getDatabase()
-      await get(ref(db, 'cheques')).then((data) => {
-        const cheques = []
-        const obj = data.val()
-        for (let key in obj) {
-          cheques.push({
-            'id': key,
-            'nombre': obj[key].nombre,
-            'estado': obj[key].estado,
-            'municipio': obj[key].municipio,
-            'descripcion': obj[key].descripcion,
-            'imagenURL': obj[key].imagenURL,
-            'fecha': obj[key].fecha,
-            'cliente': obj[key].cliente,
-            'recibo': obj[key].recibo,
-            'statu': obj[key].statu,
-            'sucursal': obj[key].sucursal,
-            'usuarioCargo': obj[key].usuarioCargo,
-            'autor': obj[key].autor
-          })
-        }
-        commit('setCheques', cheques)
-      }).catch((error) => {
+    async listarCheques({ commit }, { status, autor }) {
+      try {
+        const db = getDatabase()
+        await get(ref(db, 'cheques')).then((data) => {
+          const cheques = []
+          const obj = data.val()
+          for (let key in obj) {
+            if(autor == obj[key].autor && status == Boolean(obj[key].statu)){
+              cheques.push({
+                'id': key,
+                'nombre': obj[key].nombre,
+                'estado': obj[key].estado,
+                'municipio': obj[key].municipio,
+                'descripcion': obj[key].descripcion,
+                'imagenURL': obj[key].imagenURL,
+                'fecha': new Date(obj[key].fecha).toLocaleDateString("es-ES"), 
+                'cliente': obj[key].cliente,
+                'recibo': obj[key].recibo,
+                'statu': obj[key].statu,
+                'sucursal': obj[key].sucursal,
+                'usuarioCargo': obj[key].usuarioCargo,
+                'autor': obj[key].autor
+              })
+            }
+          }
+          commit('setCheques', cheques)
+        })
+        return { 'message': 'Consulta satisfactoria.' }
+      } catch (error) {
         const messageError = error.message
         const codeError = error.code
         return { 'message': messageError, 'code': codeError, 'error': messageError }
-      })
-      return { 'message': 'Consulta satisfactoria.' }
+      }
     },
     async verCheque({ commit }, { uid }) {
       try {
@@ -349,12 +353,14 @@ export default new Vuex.Store({
         const objUsuarios = data.val()
         const usuarios = []
         for (let key in objUsuarios) {
-          usuarios.push({
+          if(!objUsuarios[key].administrador) {
+            usuarios.push({
             id: key,
             administrador: objUsuarios[key].administrador,
             email: objUsuarios[key].email,
             username: objUsuarios[key].username
-          })
+            })
+          }
         }
         commit('setUsers', usuarios)
         return { message: 'Consulta satisfactoria' }

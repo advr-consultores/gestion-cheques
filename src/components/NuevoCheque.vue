@@ -5,7 +5,7 @@
         <h1>Registrar cheque</h1>
       </v-card-text>
       <v-card-text>
-        <form @submit.prevent="crearCheque()">
+        <form ref="formCheque" @submit.prevent="crearCheque()">
           <v-text-field label="Nombre del cheque" v-model="nombre" required />
 
           <v-autocomplete
@@ -177,7 +177,8 @@ export default {
       );
       if (uid) {
         alert(message);
-        this.$router.push("/cheque/" + uid);
+        this.$refs.formCheque.reset()
+        // this.$router.push("/cheque/" + uid);
       } else {
         alert("No se pudo crear el cheque.");
       }

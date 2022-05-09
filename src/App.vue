@@ -23,13 +23,6 @@
       <v-container fluid>
         <router-view></router-view>
       </v-container>
-      <br>
-        <v-row v-if="userIsAuthenticated" justify="space-around" >
-          <v-btn color="green" fab large dark @click="$router.go(0)"><v-icon large>
-          mdi-reload
-        </v-icon></v-btn>
-        
-        </v-row>
     </v-main>
   </v-app>
 </template>
