@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent max-width="600px">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn color="primary" dark v-bind="attrs" v-on="on">
+        <v-btn color="warning" dark v-bind="attrs" v-on="on">
           <v-icon>mdi-format-list-checks</v-icon>Agregar recibo
         </v-btn>
       </template>

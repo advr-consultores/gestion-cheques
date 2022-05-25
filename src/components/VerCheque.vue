@@ -2,6 +2,7 @@
   <div>
     <v-card color="#1F7087" dark class="mx-auto">
       <v-card-actions>
+        <v-btn fab x-small @click="$router.go(-1)"><v-icon>mdi-arrow-left</v-icon> </v-btn>
         <v-spacer />
         <FormularioAgregarRecibo v-if="isAdmin || isAcargo" :id="id" />
       </v-card-actions>
@@ -27,14 +28,13 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         
+        <Comentarios :idCheque="id" />
         <ActualizarCheque
-        v-if="false"
           :id="id"
           :cliente="cheque.cliente"
           :nombre="cheque.nombre"
           :descripcion="cheque.descripcion"
           :imagenURL="cheque.imagenURL" />
-        <Comentarios :idCheque="id" />
         <v-btn
           class="error"
           @click="eliminarCheque()"

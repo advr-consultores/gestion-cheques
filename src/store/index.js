@@ -149,6 +149,9 @@ export default new Vuex.Store({
             update(ref(db, 'cheques/' + key), {
               'imagenURL': url
             })
+            commit('setCheque', {
+              id: key, nombre, cliente, estado, municipio, sucursal, imagen, descripcion, fecha, statu, usuarioCargo, autor, imagenURL: url
+            })
           })
         })
       }).catch((error) => {
@@ -156,7 +159,6 @@ export default new Vuex.Store({
         const codeError = error.code
         return { 'message': messageError, 'code': codeError, 'error': messageError }
       })
-      dispatch('listarCheques')
       return { 'message': 'Cheque creado correctamente.', 'uid': key, error: null }
     },
     async actualizarCheque({ commit }, { uid, nombre, cliente, estado, municipio, imagen, imagenURL, descripcion, statu, usuarioCargo, sucursal }) {

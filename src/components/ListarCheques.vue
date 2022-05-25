@@ -34,7 +34,7 @@
       <v-text-field
         v-model="buscar"
         append-icon="mdi-magnify"
-        label="Buscar cheques"
+        label="Buscar cheque (mcpio, d/f, desc.)"
         single-line
         clearable
       ></v-text-field>

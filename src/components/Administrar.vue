@@ -15,30 +15,36 @@
         </v-btn>
         <v-toolbar-title>Administrar cheques</v-toolbar-title>
       </v-toolbar>
-      <v-list three-line subheader>
+      <v-list>
         <v-subheader>Usuarios</v-subheader>
       </v-list>
       <v-divider></v-divider>
-        <v-autocomplete
-        v-model="usuario"
-        :items="usuarios"
-        item-text="username"
-        item-value="id"
-        clearable
-        no-data-text="No se encontró ningún usuario."
-        label="Encargadas de las peticiones"
-        item-disabled="administrador"
-      />
-      <v-autocomplete
-        v-model="usuarioResponsable"
-        :items="usuarios"
-        item-text="username"
-        item-value="id"
-        clearable
-        no-data-text="No se encontró ningún usuario."
-        label="Control de cheques"
-        item-disabled="administrador"
-      />
+      <v-list>
+        <v-list-item>
+          <v-autocomplete
+            v-model="usuario"
+            :items="usuarios"
+            item-text="username"
+            item-value="id"
+            clearable
+            no-data-text="No se encontró ningún usuario."
+            label="Encargadas de las peticiones"
+            item-disabled="administrador"
+          />
+        </v-list-item>
+        <v-list-item>
+          <v-autocomplete
+            v-model="usuarioResponsable"
+            :items="usuarios"
+            item-text="username"
+            item-value="id"
+            clearable
+            no-data-text="No se encontró ningún usuario."
+            label="Control de cheques"
+            item-disabled="administrador"
+          />
+        </v-list-item>
+      </v-list>
     </v-card>
   </v-dialog>
 </template>
@@ -49,46 +55,55 @@ export default {
     return {
       dialog: false,
       usuarioSeleccionado: null,
-      usuarioResponsableSeleccionado: null
+      usuarioResponsableSeleccionado: null,
     };
   },
   computed: {
-    uid(){
-      return this.$store.getters.getUid
+    uid() {
+      return this.$store.getters.getUid;
     },
     usuarios() {
-      return this.$store.getters.getUsuarios
+      return this.$store.getters.getUsuarios;
     },
-    usuario:{
-      get(){
-        const uidU = this.uid
-        if (this.usuarioSeleccionado != null){
-          return this.usuarioSeleccionado
+    usuario: {
+      get() {
+        const uidU = this.uid;
+        if (this.usuarioSeleccionado != null) {
+          return this.usuarioSeleccionado;
         }
-        this.$emit('eventAutorSeleccionado', { 'usuario': uidU, 'responsableUsuario': this.usuarioResponsableSeleccionado })
-        return uidU
+        this.$emit("eventAutorSeleccionado", {
+          usuario: uidU,
+          responsableUsuario: this.usuarioResponsableSeleccionado,
+        });
+        return uidU;
       },
-      set(newValue){
-        this.usuarioSeleccionado = newValue
-        this.$emit('eventAutorSeleccionado', { 'usuario': newValue, 'responsableUsuario': this.usuarioResponsableSeleccionado })
-      }
+      set(newValue) {
+        this.usuarioSeleccionado = newValue;
+        this.$emit("eventAutorSeleccionado", {
+          usuario: newValue,
+          responsableUsuario: this.usuarioResponsableSeleccionado,
+        });
+      },
     },
-    usuarioResponsable:{
-      get(){
-        return this.usuarioResponsableSeleccionado
+    usuarioResponsable: {
+      get() {
+        return this.usuarioResponsableSeleccionado;
       },
-      set(newValue){
-        this.usuarioResponsableSeleccionado = newValue
-        this.$emit('eventAutorSeleccionado', { 'usuario': this.usuario, 'responsableUsuario': newValue})
-      }
-    }
+      set(newValue) {
+        this.usuarioResponsableSeleccionado = newValue;
+        this.$emit("eventAutorSeleccionado", {
+          usuario: this.usuario,
+          responsableUsuario: newValue,
+        });
+      },
+    },
   },
-  created(){
-    this.listarUsuarios()
+  created() {
+    this.listarUsuarios();
   },
   methods: {
-    async listarUsuarios(){
-      await this.$store.dispatch('obtenerUsuarios')
+    async listarUsuarios() {
+      await this.$store.dispatch("obtenerUsuarios");
     },
   },
 };

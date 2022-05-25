@@ -10,6 +10,7 @@
           dark
           v-bind="attrs"
           v-on="on"
+          disabled
         > <v-icon>mdi-pencil</v-icon>
         </v-btn>
       </template>
