@@ -36,7 +36,7 @@
           type="file"
           style="display: none"
           ref="archivoEntrada"
-          accept="image/png, image/jpeg, image/bmp"
+          accept="image/png"
           @change="imagenElegida"
         />
         <v-img :src="imagenURL" />
@@ -57,7 +57,6 @@
         <v-col cols="12" sm="12">
           <v-btn block color="warning" :disabled="!Boolean(uid)" :to="uid">Ver cheque</v-btn>
         </v-col>
-        <v-col cols="12" sm="12"><v-btn block color="green" disabled>Crear cheque</v-btn></v-col>
         <v-col cols="12" sm="12"><v-btn block color="primary" to="/">Ir Inicio</v-btn></v-col>
       </v-row>
       

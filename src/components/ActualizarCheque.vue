@@ -2,7 +2,6 @@
   <v-dialog
       v-model="dialog"
       persistent
-      max-width="350"
     >
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -10,36 +9,37 @@
           dark
           v-bind="attrs"
           v-on="on"
-          disabled
         > <v-icon>mdi-pencil</v-icon>
         </v-btn>
       </template>
       <v-card class="mx-auto">
-        <v-container>
+          <v-card-title>
+              Actualizar cheque <v-spacer></v-spacer>
+              <v-btn icon color="error" @click="dialog = !dialog"><v-icon>mdi-close</v-icon></v-btn>
+          </v-card-title>
+          <v-divider></v-divider>
           <v-card-text>
-            <h1>Registrar cheque</h1>
-          </v-card-text>
-          <v-card-text>
-            <form @submit.prevent="crearCheque()">
-              <v-text-field label="Nombre del cheque" v-model="nombre" required />
+            <form>
+              <v-text-field label="Nombre del cheque" v-model="name" required />
 
               <v-autocomplete
-                v-model="cliente"
+                v-model="client"
                 :items="clientes"
                 clearable
                 label="Cliente"
               />
-              <SeleccionarEstadosMunicipio
+              <seleccionar-estados-municipio
                 :id="id"
-                @eventEstadoMunicipio="setstadoMunicipio"
+                @eventEstadoMunicipio="setEstadoMunicipio"
               />
-              <SucursalesCode
+              <sucursales-code
                 :estado="estado"
                 :municipio="municipio.toUpperCase()"
+                :cliente="cheque.cliente"
                 :id="id"
                 @eventSucursal="setSucursal"
               />
-              <SeleccionarUsuario :id="id" @eventUsuario="setUsuarioCargo" />
+              <seleccionar-usuario :id="id" @eventUsuario="setUsuarioCargo" />
               <v-file-input
                 v-model="imagen"
                 prepend-icon="mdi-camera"
@@ -51,23 +51,22 @@
                 type="file"
                 style="display: none"
                 ref="archivoEntrada"
-                accept="image/png, image/jpeg, image/bmp"
+                accept="image/png"
                 @change="imagenElegida"
               />
-              <v-img :src="imagenURL" />
+              <v-img :src="img" />
 
               <v-text-field label="Descripción" v-model="descripcion" required />
 
               <v-card-actions>
                 <v-spacer />
-                <v-btn class="error ma-2" type="submit" @click="dialog = false">Cancelar</v-btn>
-                <v-btn class="primary" :disabled="!formIsValid" type="submit" @click="dialog=false, crearCheque()">
+                <v-btn class="error ma-2" @click="dialog = false">Cancelar</v-btn>
+                <v-btn class="primary" :disabled="!formIsValid" @click="crearCheque()">
                   Guardar cheque
                 </v-btn>
               </v-card-actions>
             </form>
           </v-card-text>
-        </v-container>
       </v-card>
     </v-dialog>
 </template>
@@ -80,43 +79,37 @@ export default {
   props: ['id', 'cliente', 'nombre', 'descripcion', 'imagenURL'],
   data() {
     return {
-      clientes: ["BBVA", "Scotiabank", "Movistar", "Banamex"],
+      clientes: ["BBVA", "Scotiabank", "Movistar", "CITI"],
       imagen: null,
-      rules: [
-        (value) =>
-          !value ||
-          value.size < 2000000 ||
-          "Avatar size should be less than 2 MB!",
-      ],
-      estatus: [
-        "Entregado a beto",
-        "Paqueteria",
-        "Entregado a responsable",
-        "Depositado",
-        "Subido",
-      ],
       statu: null,
       estado: "",
       municipio: "",
       usuarioCargo: null,
       sucursal: null,
       dialog: false,
+      cheque: {
+        uid: null,
+        nombre: null,
+        cliente: null,
+        estado: null,
+        municipio: null,
+        sucursal: null,
+        usuarioCargo: null,
+        imagenURL: null,
+        descripcion:null,
+        imagen: null
+      }
     };
   },
   components: {
-    SeleccionarEstadosMunicipio,
-    SeleccionarUsuario,
-    SucursalesCode,
+    'seleccionar-estados-municipio': SeleccionarEstadosMunicipio,
+    'seleccionar-usuario': SeleccionarUsuario,
+    'sucursales-code': SucursalesCode,
   },
   computed: {
     formIsValid() {
-      const { nombre, cliente, estado, municipio, usuario, descripcion } = this;
-      return Boolean(nombre && cliente && estado && municipio && usuario && descripcion);
-    },
-    reglaImagen() {
-      if (this.imagen != null) {
-        return "Seleccione una imagen";
-      } else null;
+      const { name, cliente, estado, municipio, usuario, descripcion } = this;
+      return Boolean(name && cliente && estado && municipio && usuario && descripcion);
     },
     usuario() {
       return this.$store.getters.getUid;
@@ -130,11 +123,37 @@ export default {
       }
       return false;
     },
+    name: {
+      set(newValue){ this.cheque.nombre = newValue },
+      get(){
+        this.cheque.nombre = this.nombre
+        return this.nombre
+      }
+    },
+    client:{
+      set(newValue){ this.cheque.cliente = newValue },
+      get(){
+        this.cheque.cliente = this.cliente
+        return this.cliente 
+      }
+    },
+    img:{
+      set(newValue){
+        this.cheque.imagenURL = newValue
+        this.cheque.imagen = this.imagen
+      },
+      get(){
+        if(this.cheque.imagen){
+          return this.cheque.imagen
+        }
+        return this.imagenURL
+      }
+    },
   },
   watch: {
     imagen(val) {
       if (!Boolean(val)) {
-        this.imagenURL = null;
+        this.img = null;
       }
     },
   },
@@ -143,21 +162,12 @@ export default {
       if (!this.formIsValid) {
         return;
       }
-      const { nombre, cliente, imagen, descripcion, statu, estado, municipio, sucursal, usuarioCargo, imagenURL, id } = this;
-      const cheque = {
-        uid: id,
-        nombre: nombre,
-        cliente: cliente,
-        estado: estado,
-        municipio: municipio,
-        imagen: imagen,
-        imagenURL: imagenURL,
-        descripcion: descripcion,
-        statu: statu,
-        usuarioCargo: usuarioCargo,
-        sucursal: sucursal,
-      };
-      const { message, uid, error } = await this.$store.dispatch(
+      const { id, cheque } = this 
+      // cheque.imagenURL = this.imagenURL
+      cheque.descripcion = this.descripcion
+      cheque.uid = id
+      
+      const { message, error } = await this.$store.dispatch(
         "actualizarCheque",
         cheque
       );
@@ -166,6 +176,7 @@ export default {
       } else {
         alert(message);
       }
+      this.dialog=false
       return
     },
     imagenSeleccionada() {
@@ -179,20 +190,24 @@ export default {
       }
       const fileReader = new FileReader();
       fileReader.addEventListener("load", () => {
-        this.imagenURL = fileReader.result;
+        this.img = fileReader.result;
       });
       fileReader.readAsDataURL(files[0]);
       this.imagen = files[0];
     },
-    setstadoMunicipio({ estado, municipio }) {
+    setEstadoMunicipio({ estado, municipio }) {
       this.estado = estado;
       this.municipio = municipio;
+      this.cheque.estado = estado
+      this.cheque.municipio = municipio
     },
     setUsuarioCargo({ usuario }) {
       this.usuarioCargo = usuario;
+      this.cheque.usuarioCargo = usuario
     },
     setSucursal({ sucursal }) {
       this.sucursal = sucursal;
+      this.cheque.sucursal = sucursal
     },
   },
 };

@@ -121,7 +121,7 @@ export default new Vuex.Store({
         return { 'message': messageError, 'code': codeError, 'error': messageError }
       }
     },
-    async registarCheque({ commit, dispatch }, { nombre, cliente, estado, municipio, sucursal, imagen, descripcion, fecha, statu, usuarioCargo, autor }) {
+    async registarCheque({ commit }, { nombre, cliente, estado, municipio, sucursal, imagen, descripcion, fecha, statu, usuarioCargo, autor }) {
       const db = getDatabase()
       const storage = getStorage()
       let key
@@ -143,7 +143,7 @@ export default new Vuex.Store({
         return key
       }).then(key => {
         const imagenURL = imagen
-        const spaceRef = sRef(storage, 'cheques/' + key + extension)
+        const spaceRef = sRef(storage, 'cheques/' + key)
         uploadBytes(spaceRef, imagenURL).then((snapshot) => {
           getDownloadURL(snapshot.ref).then((url) => {
             update(ref(db, 'cheques/' + key), {
@@ -161,7 +161,7 @@ export default new Vuex.Store({
       })
       return { 'message': 'Cheque creado correctamente.', 'uid': key, error: null }
     },
-    async actualizarCheque({ commit }, { uid, nombre, cliente, estado, municipio, imagen, imagenURL, descripcion, statu, usuarioCargo, sucursal }) {
+    async actualizarCheque(context, { uid, nombre, cliente, estado, municipio, imagen, descripcion, usuarioCargo, sucursal }) {
       const db = getDatabase()
       await update(ref(db, 'cheques/' + uid), {
         'nombre': nombre,
@@ -169,16 +169,17 @@ export default new Vuex.Store({
         'estado': estado,
         'municipio': municipio,
         'descripcion': descripcion,
-        'imagenURL': imagenURL,
-        'statu': statu,
         'usuarioCargo': usuarioCargo,
         'sucursal': sucursal
       }).then(()=> {
         if(imagen != null){
-          const filename = imagen.name
-          const extension = filename.slice(filename.lastIndexOf('.'))
+          const storage = getStorage()
+          // const filename = imagen.name
+          // const extension = filename.slice(filename.lastIndexOf('.'))
+          // const desertRef = sRef(storage, 'cheques/' + uid)
+          // deleteObject(desertRef)
           const imagenURL = imagen
-          const spaceRef = sRef(storage, 'cheques/' + uid + extension)
+          const spaceRef = sRef(storage, 'cheques/' + uid)
           uploadBytes(spaceRef, imagenURL).then((snapshot) => {
             getDownloadURL(snapshot.ref).then((url) => {
               update(ref(db, 'cheques/' + uid), {
@@ -199,7 +200,7 @@ export default new Vuex.Store({
         const db = getDatabase()
         await remove(ref(db, 'cheques/' + uid))
         const storage = getStorage()
-        const desertRef = sRef(storage, `cheques/${uid}.${extension}`)
+        const desertRef = sRef(storage, `cheques/${uid}`)
         await deleteObject(desertRef)
         return { 'message': 'Eliminación exitosa' }
       } catch (error) {
@@ -214,7 +215,7 @@ export default new Vuex.Store({
         const storage = getStorage()
         const filename = imagen.name
         const extension = filename.slice(filename.lastIndexOf('.'))
-        const spaceRef = sRef(storage, 'recibos/' + uid + extension)
+        const spaceRef = sRef(storage, 'recibos/' + uid)
         await uploadBytes(spaceRef, imagen).then((snapshot) => {
           getDownloadURL(snapshot.ref).then((url) => {
             update(ref(db, 'cheques/' + uid), {

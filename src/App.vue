@@ -107,9 +107,6 @@ export default {
       this.$store.dispatch("cerrarSesion");
       this.$router.push("/login");
     },
-    cerrarSesions() {
-      this.$store.dispatch("send", { email: "davidflorescheques@gmail.com" });
-    },
   },
 };
 </script>

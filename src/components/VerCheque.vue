@@ -27,7 +27,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        
+          
         <Comentarios :idCheque="id" />
         <ActualizarCheque
           :id="id"
@@ -115,7 +115,7 @@ export default {
       return this.$store.getters.isAdmin;
     },
     isAcargo() {
-      if (this.$store.getters.getUid == this.cheque.usuarioCargo) {
+      if (this.$store.getters.getUid == this.cheque.usuarioCargo || this.$store.getters.getUid == this.cheque.autor) {
         return true;
       }
       return false;
@@ -149,12 +149,12 @@ export default {
       let isEliminar = confirm("Estas a punto de eliminar este cheque.");
       if (isEliminar) {
         const { id, cheque } = this;
-        const extensionFile = cheque.imagenURL.match(/.*\/([^/]+)\.([^?]+)/i)[2];
+        // const extensionFile = cheque.imagenURL.match(/.*\/([^/]+)\.([^?]+)/i)[2];
         const { message, error } = await this.$store.dispatch(
           "eliminarCheque",
           {
             uid: id,
-            extension: extensionFile,
+            extension: 'png',
           }
         );
         if (error) {
