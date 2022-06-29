@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+// import Home from '../views/Home.vue'
 import store from '../store'
 
 import Cheques from '../views/Cheque.vue'
@@ -8,7 +8,6 @@ import NuevoCheque from '../components/NuevoCheque.vue'
 import VerCheque from '../components/VerCheque.vue'
 import IniciarSesion from '../components/IniciarSesion.vue'
 import Usuario from '../views/Usuario.vue'
-import send from '../views/send.vue'
 
 const enterIfUserAutenticado = (to, from, next) => {
   if (store.getters.getIfUsuarioAuth) {
@@ -34,12 +33,6 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
-    path: '/cheques',
-    name: 'Cheques',
-    component: Cheques,
-    beforeEnter: enterIfUserAutenticado,
   },
   {
     path: '/cheque/nuevo',

@@ -4,6 +4,8 @@ import Vuex from 'vuex'
 import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 import { getDatabase, ref, push, get, update, set, remove } from 'firebase/database'
 import { getStorage, uploadBytes, ref as sRef, getDownloadURL, deleteObject } from 'firebase/storage'
+import { getMessaging, getToken } from "firebase/messaging";
+
 
 Vue.use(Vuex)
 
@@ -403,6 +405,19 @@ export default new Vuex.Store({
       const { username, administrador } = await dispatch('obtenerUsuario')
       commit('setUser', { uid, accessToken, username, administrador })
     },
+    async requestPermission(context, messaging){
+      // const messaging = getMessaging();
+      await getToken(messaging, { vapidKey: 'BKBZY-79v5MgXLXTYfih2E3v4EOLb68jeQZVQ9RnnsIMsKn87ReY-sKcgoBD5YU2oBKkHpKTPBgzvFfIbnB8VUs'})
+      .then((currentToken) => {
+        if (currentToken) {
+          console.log('client token', currentToken)
+        } else {
+          console.log('No registration token available. Request permission to generate one.');
+        }
+      }).catch((err) => {
+        console.log('An error occurred while retrieving token. ', err);
+      })      
+    }
   },
   getters: {
     getCheques(state) {

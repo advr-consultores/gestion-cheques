@@ -81,6 +81,7 @@
 </template>
 
 <script>
+
 export default {
   name: "App",
   data: () => ({
@@ -91,6 +92,8 @@ export default {
       { title: "Seguridad", icon: "mdi-key", link: "" },
     ],
   }),
+  mounted () {
+  },
   computed: {
     userIsAuthenticated() {
       return this.$store.getters.getIfUsuarioAuth;
