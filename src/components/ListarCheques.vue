@@ -1,12 +1,13 @@
 <template>
-  <v-card max-width="800" class="mx-auto">
-    <v-card-actions>
-    <v-card-subtitle>Encargada <b>{{creado}}</b> <br> Control <b>{{acargo}}</b> </v-card-subtitle>
-      <v-spacer />
-      <v-btn color="success" :to="'/cheque/nuevo'">
-        <v-icon left>mdi-credit-card-plus</v-icon> cheque
-      </v-btn>
-    </v-card-actions>
+  <v-card class="mx-auto">
+        <v-card-title v-if="acargo">Encargad@ {{creado}}
+          <v-spacer></v-spacer>
+          <v-btn color="success" :to="'/cheque/nuevo'">
+            cheque <v-icon right>mdi-credit-card-plus</v-icon>
+          </v-btn></v-card-title>
+        <v-card-subtitle> Control <b v-if="acargo != 'Anonimo'">{{acargo}}</b></v-card-subtitle>
+      
+    <v-divider />
     <v-card-actions>
       <v-chip
         class="ma-2"
@@ -39,19 +40,19 @@
         clearable
       ></v-text-field>
     </v-toolbar>
-    <v-card-title>
-      {{chequesBuscado.length}} cheques
-      <v-spacer />
-      <!-- <v-btn text color="primary">Administrar</v-btn> -->
-      <Administrar @eventAutorSeleccionado="setAutorCeheque" />
-    </v-card-title>
     <v-responsive
       class="overflow-y-auto"
       max-height="400"
     >
+      <v-card-title>
+        {{chequesBuscado.length}} cheques
+        <v-spacer />
+        <!-- <v-btn text color="primary">Administrar</v-btn> -->
+        <Administrar @eventAutorSeleccionado="setAutorCeheque" />
+      </v-card-title>
       <v-container fluid>
         <v-row>
-          <v-col v-for="cheque in chequesBuscado" :key="cheque.id" cols="12" sm="6">
+          <v-col v-for="cheque in chequesBuscado" :key="cheque.id" cols="auto">
             <v-card
               class="mx-auto"
               color="#1F7087"
@@ -100,9 +101,9 @@
           </v-col>
           <v-col v-if="isClientes" cols="12">
             <v-card class="mx-auto" color="#1F7087" dark>
-              <v-card-text>
-                No hay cheques, de click en registrar cheque.
-              </v-card-text>
+              <v-card-title>
+                No hay cheques.
+              </v-card-title>
             </v-card>
           </v-col>
         </v-row>

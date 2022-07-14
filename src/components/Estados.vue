@@ -2601,7 +2601,7 @@ export default {
   computed: {
     cheque() {
       if(this.id){
-        return this.$store.getters.loadedMeetup(this.id);
+        return this.$store.getters.getCheque(this.id);
       } return null
     },
     estado: {

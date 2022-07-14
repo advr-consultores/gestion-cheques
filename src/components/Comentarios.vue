@@ -4,9 +4,10 @@
       fullscreen
       hide-overlay
       transition="dialog-bottom-transition"
+      persistent
     >
       <template v-slot:activator="{ on, attrs }">
-        <v-btn color="primary" dark v-bind="attrs" v-on="on">
+        <v-btn color="primary mp-5" dark v-bind="attrs" v-on="on">
           <v-icon>mdi-comment</v-icon>
         </v-btn>
       </template>
@@ -58,23 +59,6 @@ export default {
   data() {
     return {
       dialog: false,
-      comments: [
-        {
-          id: 1,
-          user: "example",
-          text: "lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor lorem ipsum dolor ",
-        },
-        {
-          id: 2,
-          user: "example1",
-          text: "lorem ipsum dolor",
-        },
-        {
-          id: 3,
-          user: "example2",
-          text: "lorem ipsum dolor again",
-        },
-      ],
     };
   },
   computed: {
@@ -83,7 +67,13 @@ export default {
     },
     comentarios(){
       return this.$store.getters.getComentarios;
-    }
+    },
+    cheque() {
+      if(this.idCheque){
+        return this.$store.getters.getCheque(this.idCheque);
+      } return null
+    },
+    usuario() { return this.$store.getters.getUid; },
   },
   created() {
     this.obtenerComentariosCheque()
@@ -99,6 +89,44 @@ export default {
       const {message, error} = await this.$store.dispatch('crearComentario', comentario)
       if(error){
         alert(message)
+        return
+      } else{
+        if (this.usuario != this.cheque.usuarioCargo){
+            const fecha = new Date(
+              new Date().getTime() - new Date().getTimezoneOffset() * 60000
+            ).toISOString();
+            const usuario_autor = this.$store.getters.getNombreUsuario
+            const mensaje_notificacion = this.nombreUsuario + ' comento el cheque: ' + this.cheque.nombre + '.'
+            const notificacion = {
+              'mensaje': mensaje_notificacion,
+              'tipo': 'Comentario',
+              'uid': this.cheque.usuarioCargo,
+              'cheque': this.idCheque,
+              'fecha': fecha
+            }
+            const { mensaje, usuario, error } = await this.$store.dispatch(
+              "crearNotificaciones",
+              notificacion
+            );
+        }
+        if (this.usuario != this.cheque.autor){
+            const fecha = new Date(
+              new Date().getTime() - new Date().getTimezoneOffset() * 60000
+            ).toISOString();
+            const usuario_autor = this.$store.getters.getNombreUsuario
+            const mensaje_notificacion = this.nombreUsuario + ' comento el cheque: ' + this.cheque.nombre + '.'
+            const notificacion = {
+              'mensaje': mensaje_notificacion,
+              'tipo': 'Comentario',
+              'uid': this.cheque.autor,
+              'cheque': this.idCheque,
+              'fecha': fecha
+            }
+            const { mensaje, usuario, error } = await this.$store.dispatch(
+              "crearNotificaciones",
+              notificacion
+            );
+        }
       }
     },
     async obtenerComentariosCheque(){

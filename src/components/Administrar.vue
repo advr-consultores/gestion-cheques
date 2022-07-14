@@ -10,14 +10,12 @@
     </template>
     <v-card class="mx-auto">
       <v-toolbar dark color="primary">
-        <v-btn icon dark @click="dialog = false">
-          <v-icon>mdi-close</v-icon>
+        <v-btn icon dark x-large @click="dialog = false">
+          <v-icon>mdi-arrow-left</v-icon>
         </v-btn>
         <v-toolbar-title>Administrar cheques</v-toolbar-title>
       </v-toolbar>
-      <v-list>
-        <v-subheader>Usuarios</v-subheader>
-      </v-list>
+        <v-card-title>Usuarios</v-card-title>
       <v-divider></v-divider>
       <v-list>
         <v-list-item>

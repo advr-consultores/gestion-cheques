@@ -21,7 +21,8 @@ new Vue({
       if (user) {
         if(user.emailVerified){
           this.$store.dispatch('autoSignIn', user)
-          this.$store.dispatch('requestPermission', firebaseMessaging)
+          // this.$store.dispatch('requestPermission', firebaseMessaging)
+          this.$store.dispatch('obtenerNotificaciones', user.uid)
         }
       }
     })

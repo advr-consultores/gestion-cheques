@@ -1,72 +1,81 @@
 <template>
-  <div>
-    <v-card color="#1F7087" dark class="mx-auto">
-      <v-card-actions>
-        <v-btn fab x-small @click="$router.go(-1)"><v-icon>mdi-arrow-left</v-icon> </v-btn>
-        <v-spacer />
-        <FormularioAgregarRecibo v-if="isAdmin || isAcargo" :id="id" />
-      </v-card-actions>
-      <v-card-title>
-        {{ cheque.nombre }}
-      </v-card-title>
-      <v-img
-        :src="cheque.imagenURL"
-        height="400px"
-        @click="setImagen(cheque.imagenURL)"
-      ></v-img>
-      <v-card-text class="font-weight-bold">
-        <div>
-          Cliente: {{ cheque.cliente }}<br />
-          Sucursal: {{ cheque.sucursal }} <br>
-          Municipio: {{ cheque.municipio }} ({{ cheque.estado }})<br />
-          Publicado: {{ cheque.fecha }} <br>
-          Autor: {{ creado }} <br>
-          Responsable: {{ acargo }}
-        </div>
-        <p class="text-h5 text--primary">{{ cheque.descripcion }}</p>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-          
-        <Comentarios :idCheque="id" />
-        <ActualizarCheque
-          :id="id"
-          :cliente="cheque.cliente"
-          :nombre="cheque.nombre"
-          :descripcion="cheque.descripcion"
-          :imagenURL="cheque.imagenURL" />
-        <v-btn
-          class="error"
-          @click="eliminarCheque()"
-          :disabled="!isAdmin && !isAcargo"
-          ><v-icon>mdi-delete</v-icon></v-btn
-        >
-      </v-card-actions>
-    </v-card>
-    <v-card color="#1F7087" class="mx-auto" dark v-if="cheque.statu">
-      <v-card-title>Estado del cheque: {{ cheque.statu }}</v-card-title>
-      <v-item-group multiple>
-        <v-row no-gutters>
-          <v-col>
-            <v-item v-slot="{ active }">
-              <v-img
-                :src="cheque.recibo"
-                height="300"
-                class="text-right pa-2"
-                @click="setImagen(cheque.recibo)"
-              >
-                <v-btn icon>
-                  <v-icon>
-                    {{ active ? "mdi-close-outline" : "mdi-close" }}
-                  </v-icon>
-                </v-btn>
-              </v-img>
-            </v-item>
-          </v-col>
-        </v-row>
-      </v-item-group>
-    </v-card>
-    <div class="d-flex flex-column justify-space-between align-center">
+  <v-row dense justify="center">
+    <v-col cols="auto">
+      <v-card color="#1F7087" dark class="mx-auto">
+        <v-card-actions>
+          <v-btn fab x-small @click="$router.go(-1)"><v-icon>mdi-arrow-left</v-icon> </v-btn>
+          <v-spacer />
+          <FormularioAgregarRecibo v-if="isAdmin || isAcargo" :id="id" />
+        </v-card-actions>
+        <v-card-title>
+          {{ cheque.nombre }}
+        </v-card-title>
+        <v-img
+          :src="cheque.imagenURL"
+          height="400px"
+          @click="setImagen(cheque.imagenURL)"
+        ></v-img>
+        <v-card-text class="font-weight-bold">
+          <div>
+            Cliente: {{ cheque.cliente }}<br />
+            Sucursal: {{ cheque.sucursal }} <br>
+            Municipio: {{ cheque.municipio }} ({{ cheque.estado }})<br />
+            Publicado: {{ cheque.fecha }} <br>
+            Autor: {{ creado }} <br>
+            Responsable: {{ acargo }}
+          </div>
+          <p class="text-h5 text--primary">{{ cheque.descripcion }}</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+           <v-row align="center" justify="space-around" no-gutters>
+
+             <Comentarios :idCheque="id" />
+             <ActualizarCheque
+               :id="id"
+               :cliente="cheque.cliente"
+               :nombre="cheque.nombre"
+               :descripcion="cheque.descripcion"
+               :imagenURL="cheque.imagenURL"
+               :autor="cheque.autor"
+               :deshabilitar = "!isAdmin && !isAcargo"  
+             />
+             <v-btn
+               class="error"
+               @click="eliminarCheque()"
+               :disabled="!isAdmin && !isAcargo"
+               ><v-icon>mdi-delete</v-icon></v-btn
+             >
+           </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+    <v-col cols="auto">
+      <v-card color="#1F7087" class="mx-auto" dark v-if="cheque.statu">
+        <v-card-title>Estado del cheque: {{ cheque.statu }}</v-card-title>
+        <v-item-group multiple>
+          <v-row no-gutters>
+            <v-col>
+              <v-item v-slot="{ active }">
+                <v-img
+                  :src="cheque.recibo"
+                  height="300"
+                  class="text-right pa-2"
+                  @click="setImagen(cheque.recibo)"
+                >
+                  <v-btn icon>
+                    <v-icon>
+                      {{ active ? "mdi-close-outline" : "mdi-close" }}
+                    </v-icon>
+                  </v-btn>
+                </v-img>
+              </v-item>
+            </v-col>
+          </v-row>
+        </v-item-group>
+      </v-card>
+    </v-col>
+    <v-col cols="auto" class="d-flex flex-column justify-space-between align-center">
       <v-overlay :z-index="zIndex" :value="overlay">
         <v-slider
           v-model="width"
@@ -77,8 +86,8 @@
         />
         <v-img :src="img" :width="width" @click="overlay = false"></v-img>
       </v-overlay>
-    </div>
-  </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -95,11 +104,6 @@ export default {
     id: { type: String, default: "" },
   },
   data: () => ({
-    items: [
-      {
-        src: "backgrounds/bg.jpg",
-      },
-    ],
     overlay: false,
     zIndex: 0,
     img: null,
@@ -109,7 +113,7 @@ export default {
   }),
   computed: {
     cheque() {
-      return this.$store.getters.loadedMeetup(this.id);
+      return this.$store.getters.getCheque(this.id);
     },
     isAdmin() {
       return this.$store.getters.isAdmin;
@@ -129,7 +133,10 @@ export default {
       const { cheque } = this
       this.getPersonalAcargo(cheque.usuarioCargo)
       return this.$store.getters.getPersonalAcargo
-    }
+    },
+    usuario() {
+      return this.$store.getters.getUid;
+    },
   },
   created() {
     this.verCheque();
@@ -150,18 +157,50 @@ export default {
       if (isEliminar) {
         const { id, cheque } = this;
         // const extensionFile = cheque.imagenURL.match(/.*\/([^/]+)\.([^?]+)/i)[2];
-        const { message, error } = await this.$store.dispatch(
-          "eliminarCheque",
-          {
-            uid: id,
-            extension: 'png',
-          }
-        );
+        const { message, error } = await this.$store.dispatch("eliminarCheque", {
+          uid: id,
+          extension: 'png'
+        });
         if (error) {
           alert(message);
           return;
         }
-        alert(message);
+        else {
+          alert(message);
+          const fecha = new Date(
+            new Date().getTime() - new Date().getTimezoneOffset() * 60000
+          ).toISOString();
+          if (this.usuario != cheque.usuarioCargo){
+            const usuario_autor = this.$store.getters.getNombreUsuario
+            const mensaje_notificacion = usuario_autor + ' elimino el cheque: ' + cheque.nombre + '.'
+            const notificacion = {
+              'mensaje': mensaje_notificacion,
+              'tipo': 'Eliminado',
+              'uid': cheque.usuarioCargo,
+              'cheque': cheque.id,
+              'fecha': fecha
+            }
+            const { mensaje, usuario, error } = await this.$store.dispatch(
+              "crearNotificaciones",
+              notificacion
+            );
+          }
+          if (this.usuario != cheque.autor){
+            const usuario_autor = this.$store.getters.getNombreUsuario
+            const mensaje_notificacion = usuario_autor + ' elimino el cheque: ' + cheque.nombre + '.'
+            const notificacion = {
+              'mensaje': mensaje_notificacion,
+              'tipo': 'Eliminado',
+              'uid': cheque.autor,
+              'cheque': cheque.id,
+              'fecha': fecha
+            }
+            const { mensaje, usuario, error } = await this.$store.dispatch(
+              "crearNotificaciones",
+              notificacion
+            );
+          }
+        }
         this.$router.push("/");
       }
     },

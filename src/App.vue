@@ -1,27 +1,13 @@
 <template>
   <v-app>
-    <v-app-bar app color="blue" elevation="4" v-if="userIsAuthenticated">
-      <v-app-bar-nav-icon
-        @click="drawer = !drawer"
-      ></v-app-bar-nav-icon>
+    <v-app-bar app color="blue" v-if="userIsAuthenticated">
+      <v-app-bar-nav-icon @click="drawer = !drawer" />
       <v-row justify="center">
         <v-toolbar-title>
           <router-link to="/" tag="span" style="cursor: pointer"><v-icon>mdi-home</v-icon></router-link>
         </v-toolbar-title>
       </v-row>
-      <v-btn icon disabled><v-icon>mdi-bell</v-icon></v-btn>
-          <!-- <v-toolbar dark class="primary">
-        <v-toolbar-items>
-          <v-btn v-if="userIsAuthenticated && isAdmin" @click="$router.push({ name: 'Usuarios' })">
-            <v-icon left dark>mdi-account-outline</v-icon>
-            Usuario
-          </v-btn>
-          <v-btn v-if="userIsAuthenticated" @click="cerrarSesion">
-            <v-icon left dark>mdi-logout</v-icon>
-            Salir
-          </v-btn>
-        </v-toolbar-items>
-      </v-toolbar> -->
+      <notificacuiones />
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" fixed temporary class="blue accent-1">
       <template v-slot:prepend>
@@ -81,7 +67,7 @@
 </template>
 
 <script>
-
+import notificacuiones from './components/Notificaciones.vue'
 export default {
   name: "App",
   data: () => ({
@@ -92,7 +78,8 @@ export default {
       { title: "Seguridad", icon: "mdi-key", link: "" },
     ],
   }),
-  mounted () {
+  components: {
+    notificacuiones
   },
   computed: {
     userIsAuthenticated() {

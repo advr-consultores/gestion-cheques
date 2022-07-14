@@ -36,7 +36,7 @@
           type="file"
           style="display: none"
           ref="archivoEntrada"
-          accept="image/png"
+          accept="image/*"
           @change="imagenElegida"
         />
         <v-img :src="imagenURL" />
@@ -117,24 +117,12 @@
           usuario,
           descripcion,
         } = this;
-        return Boolean(
-          nombre &&
-            cliente &&
-            imagen &&
-            estado &&
-            municipio &&
-            usuario &&
-            descripcion
-        );
+        return Boolean(nombre && cliente && imagen && estado && municipio && usuario && descripcion);
       },
       reglaImagen() {
-        if (this.imagen != null) {
-          return "Seleccione una imagen";
-        } else null;
+        if (this.imagen != null) { return "Seleccione una imagen"; } else null;
       },
-      usuario() {
-        return this.$store.getters.getUid;
-      },
+      usuario() { return this.$store.getters.getUid; },
     },
     watch: {
       imagen(val) {
@@ -145,24 +133,13 @@
     },
     methods: {
       async crearCheque() {
-        if (!this.formIsValid) {
-          return;
-        }
+        if (!this.formIsValid) { return; }
         if (!this.imagen) {
           alert("Seleccione una imagen.");
           return;
         }
-        const {
-          nombre,
-          cliente,
-          imagen,
-          descripcion,
-          statu,
-          estado,
-          municipio,
-          sucursal,
-          usuarioCargo,
-          usuario,
+        const { 
+          nombre, cliente, imagen, descripcion, statu, estado, municipio, sucursal, usuarioCargo, usuario,
         } = this;
         const fecha = new Date(
           new Date().getTime() - new Date().getTimezoneOffset() * 60000
@@ -191,6 +168,22 @@
           this.uid = uid
         } else {
           this.mensaje ="No se pudo crear el cheque."
+          return
+        }
+        if (usuario != usuarioCargo){
+          const usuario_autor = this.$store.getters.getNombreUsuario
+          const mensaje_notificacion = usuario_autor + ' te asigno el cheque: ' + nombre + '.'
+          const notificacion = {
+            'mensaje': mensaje_notificacion,
+            'tipo': 'Asignación',
+            'uid': usuarioCargo,
+            'cheque': uid,
+            'fecha': fechaConTiempo
+          }
+          const { mensaje, usuario, error } = await this.$store.dispatch(
+            "crearNotificaciones",
+            notificacion
+          );
         }
       },
       imagenSeleccionada() {

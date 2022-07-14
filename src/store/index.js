@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from 'firebase/auth'
 import { getDatabase, ref, push, get, update, set, remove } from 'firebase/database'
 import { getStorage, uploadBytes, ref as sRef, getDownloadURL, deleteObject } from 'firebase/storage'
 import { getMessaging, getToken } from "firebase/messaging";
@@ -17,7 +17,8 @@ export default new Vuex.Store({
     usuarios: [],
     personalAcargo: null,
     personalCreado: null,
-    comentarios: []
+    comentarios: [],
+    notificaciones: []
   },
   mutations: {
     setCheques(state, payload) {
@@ -25,6 +26,9 @@ export default new Vuex.Store({
     },
     setCheque(state, payload) {
       state.cheques.push(payload)
+    },
+    setNotificaciones(state, payload) {
+      state.notificaciones = payload
     },
     setUser(state, payload) {
       state.user = payload
@@ -55,6 +59,9 @@ export default new Vuex.Store({
     },
     setPersonalCreado(state, personal) {
       state.personalCreado = personal
+    },
+    eliminarNotificacion(state, indexOf){
+      state.notificaciones.splice(indexOf)
     }
   },
   actions: {
@@ -65,7 +72,7 @@ export default new Vuex.Store({
           const cheques = []
           const obj = data.val()
           for (let key in obj) {
-            if(autor == obj[key].autor && status == Boolean(obj[key].statu)){
+            if((autor == obj[key].autor || autor == obj[key].usuarioCargo)  && status == Boolean(obj[key].statu)){
               cheques.push({
                 'id': key,
                 'nombre': obj[key].nombre,
@@ -226,6 +233,58 @@ export default new Vuex.Store({
             })
           })
         })
+      } catch (error) {
+        const messageError = error.message
+        const codeError = error.code
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
+      }
+    },
+    async crearNotificaciones(context, { mensaje, tipo, uid, cheque, fecha }) {
+      try {
+        const db = getDatabase();
+        await push(ref(db, 'notificaciones/' + uid), {
+          'mensaje': mensaje,
+          'tipo': tipo,
+          'cheque': cheque,
+          'fecha': fecha
+        });
+        return { 'message': 'ok' }
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        return { 'message': errorMessage, 'code': errorCode }
+      }
+    },
+    async obtenerNotificaciones({ commit }, uid) {
+      try {
+        const db = getDatabase()
+        await get(ref(db, 'notificaciones/' + uid)).then((data) => {
+          const notificaciones = []
+          const obj = data.val()
+          for (let key in obj) {
+            notificaciones.push({
+              'id': key,
+              'mensaje': obj[key].mensaje,
+              'tipo': obj[key].tipo,
+              'cheque': obj[key].cheque,
+              'fecha': obj[key].fecha
+            })          
+          }
+          commit('setNotificaciones', notificaciones)
+        })
+        return { 'message': 'Consulta satisfactoria.' }
+      } catch (error) {
+        const messageError = error.message
+        const codeError = error.code
+        return { 'message': messageError, 'code': codeError, 'error': messageError }
+      }
+    },
+    async eliminarNotificacion({commit}, { uid, id, indice }){
+      try {
+        const db = getDatabase()
+        await remove(ref(db, 'notificaciones/' + uid + '/' + id))
+        commit('eliminarNotificacion', indice)
+        return { 'message': '¡Notificación vista!' }
       } catch (error) {
         const messageError = error.message
         const codeError = error.code
@@ -407,7 +466,7 @@ export default new Vuex.Store({
     },
     async requestPermission(context, messaging){
       // const messaging = getMessaging();
-      await getToken(messaging, { vapidKey: 'BKBZY-79v5MgXLXTYfih2E3v4EOLb68jeQZVQ9RnnsIMsKn87ReY-sKcgoBD5YU2oBKkHpKTPBgzvFfIbnB8VUs'})
+      await getToken(messaging, { vapidKey: ''})
       .then((currentToken) => {
         if (currentToken) {
           console.log('client token', currentToken)
@@ -417,6 +476,18 @@ export default new Vuex.Store({
       }).catch((err) => {
         console.log('An error occurred while retrieving token. ', err);
       })      
+    },
+    async enviarCorreoRestablecimiento(context, email){
+      const auth = getAuth();
+      try {
+        await sendPasswordResetEmail(auth, email)
+        return { 'message': '!Correo electrónico de restablecimiento de contraseña enviado!'}
+        
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        return { 'message': errorMessage, 'error': errorCode }
+      }
     }
   },
   getters: {
@@ -425,7 +496,7 @@ export default new Vuex.Store({
         return meetupA.date > meetupB.date
       })
     },
-    loadedMeetup(state) {
+    getCheque(state) {
       return (meetupId) => {
         return state.cheques.find((meetup) => {
           return meetup.id === meetupId
@@ -439,6 +510,7 @@ export default new Vuex.Store({
     getUsuarios: (state) => state.usuarios,
     getPersonalAcargo: (state) => state.personalAcargo,
     getPersonalCreado: (state) => state.personalCreado,
-    getComentarios:(state) => state.comentarios
+    getComentarios:(state) => state.comentarios,
+    getNotificacones:(state) => state.notificaciones
   }
 })

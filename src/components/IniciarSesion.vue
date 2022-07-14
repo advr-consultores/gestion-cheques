@@ -1,8 +1,13 @@
 <template>
-  <v-card class="mx-auto" max-width="500">
-    <v-card-title>Iniciar sesión en ADVR Cheques</v-card-title>
-    <v-card-text>
-      <form @submit.prevent="onSignin()">
+  <v-card class="mx-auto container" max-width="500">
+    <form @submit.prevent="onSignin()">
+      <v-card-title class="grey lighten-2" v-if="!cambiarPWD">Iniciar sesión en ADVR Cheques</v-card-title>
+      <v-card-title class="grey lighten-2" v-else>Encuentra tu cuenta</v-card-title>
+      <v-divider></v-divider>
+      <v-card-subtitle v-if="cambiarPWD">
+      Ingrese su correo electrónico para enviar un correo electrónico de restablecimiento de contraseña.
+      </v-card-subtitle>
+      <v-card-text>
         <v-text-field
           label="Correo electronico"
           v-model="email"
@@ -10,6 +15,7 @@
           required
         />
         <v-text-field
+          v-if="!cambiarPWD"
           name="password"
           label="Contraseña"
           id="password"
@@ -17,19 +23,33 @@
           type="password"
           required
         />
-        <v-card-actions>
-          <v-spacer/>
-          <v-btn
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions v-if="!cambiarPWD">
+        <v-btn
           type="submit"
           color="success"
           :disabled="loading"
           :loading="loading"
-        >
-          Iniciar Sesion
-        </v-btn>
-        </v-card-actions>
-      </form>
-    </v-card-text>
+          block
+          v-text="'Iniciar sesión'"
+        />
+      </v-card-actions>
+      <v-card-actions v-else>
+        <v-spacer></v-spacer>
+        <v-btn v-text="'Cancelar'" @click="cambiarPWD = !cambiarPWD" color="gray" />
+        <v-btn v-text="'Enviar'" @click="enviarCorreo()" color="primary" />
+      </v-card-actions>
+      <div class="center">
+        <v-btn
+          v-if="!cambiarPWD"
+          v-text="'¿Olvidaste tu contraseña?'"
+          text
+          color="primary"
+          @click="cambiarPWD = !cambiarPWD"
+        />
+      </div>
+    </form>
   </v-card>
 </template>
 
@@ -39,6 +59,7 @@ export default {
     return {
       email: "",
       password: "",
+      cambiarPWD: false,
     };
   },
   computed: {
@@ -55,7 +76,7 @@ export default {
   watch: {
     user(value) {
       if (value) {
-        this.$router.push('/');
+        this.$router.push("/");
       }
     },
   },
@@ -65,12 +86,28 @@ export default {
         email: this.email,
         password: this.password,
       });
-      if (error){
-        alert(message)
-        return
+      if (error) {
+        alert(message);
+        return;
       }
-      alert(message)
+      alert(message);
+    },
+    async enviarCorreo() {
+      const { email } = this
+      const { message, error } = await this.$store.dispatch("enviarCorreoRestablecimiento", email);
+      if (error) {
+        alert(message);
+        return;
+      }
+      alert(message);
+      this.cambiarPWD = !this.cambiarPWD
     },
   },
 };
 </script>
+
+<style>
+.center {
+  text-align: center;
+}
+</style>

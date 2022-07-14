@@ -11,6 +11,7 @@ import { initializeApp } from "firebase/app";
 const firebaseConfig = {
   apiKey: "AIzaSyDNTExAc8-cRl1aBzJokUwjW5lW534sovY",
   authDomain: "chequesadvr.firebaseapp.com",
+  databaseURL: "https://chequesadvr-default-rtdb.firebaseio.com",
   projectId: "chequesadvr",
   storageBucket: "chequesadvr.appspot.com",
   messagingSenderId: "825162486096",

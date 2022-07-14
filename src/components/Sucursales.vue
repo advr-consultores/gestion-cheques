@@ -30,11 +30,11 @@ export default {
     sucursales: {
       Guerrero: {
         "IGUALA DE LA INDEPENDENCIA": {
-          BBVA: [125, 4651],
+          BBVA: ["(125) IGUALA CENTRO", "(4651) GALERIAS"],
           CITI:["SUC. IGUALA/EDIF. (17533)"], MOVISTAR:[], SCOTIABANK:[]
         },
         "CHILPANCINGO DE LOS BRAVO": {
-          BBVA: [557, 4697, 5553, 7695],
+          BBVA: ["(557) CHILPANCINGO OFNA. PRINCIPAL", "(4697) CHILPANCINGO", "(5553) CHILPANCINGO", "(7695) GOBIERNO GUERRERO / EMPRESAS CHILPANCINGO"],
           CITI:[
             "SUC. CHILPANCINGO/EDIF. (17540)",
             "SUC. CIUDAD ADMINISTRATIVA/EDIF. (26750)",
@@ -42,8 +42,8 @@ export default {
           ], MOVISTAR:[], SCOTIABANK:[]
         },
         "ACAPULCO DE JUAREZ": {
-          BBVA: [580, 581, 582, 583, 584, 927, 1548, 1559, 2395, 3031, 4661, 5053,
-          5540, 5543, 5544, 6359],
+          BBVA: ["(580) ACAPULCO CONVENCIONES", "(581) ACAPULCO PROGRESO", "(582) ACAPULCO ZOCALO", "(583) SITE ACAPULCO MIGUEL ALEMAN", "(584) ACAPULCO FLAMBOYANT", "(927) SITE ACAPULCO MIGUEL ALEMAN", "(1548) GALERÍAS DIANA ", "(1559) PATIO ACAPULCO", "(2395) H ACAPULCO", "(3031) CENTRO PYME ACAPULCO", "(4661) PLAZA SENDERO ACAPULCO", "(5053) ACAPULCO DIAMANTE",
+          "(5540) ACAPULCO VARIEDADES", "(5543) ACAPULCO EJIDO", "(5544) ACAPULCO CUAUHTEMOC", "(6359) ACAPULCO"],
           CITI:[
             "SUC. COSTERA/EDIF. (17547)",
             "SUC. ACAPULCO/EDIF. (17548)",
@@ -58,64 +58,64 @@ export default {
           SCOTIABANK:[]
         },
         OMETEPEC: {
-          BBVA: [874],
+          BBVA: ["(874) OMETEPEC OFICINA PRINCIPAL"],
           CITI:["SUC. OMETEPEC (REUB) (50943)"], MOVISTAR:[], SCOTIABANK:[]
         },
         "TAXCO DE ALARCON": {
-          BBVA: [1553, 5561, 5562],
+          BBVA: ["(1553) LAS AMERICAS TAXCO", "(5561) TAXCO PLATEROS", "(5562) TAXCO OF. PRINCIPAL"],
           CITI:["SUC. TAXCO (17521)"], MOVISTAR:[], SCOTIABANK:[]
         },
         "SAN MARCOS": {
-          BBVA: [4637],
+          BBVA: ["(4637) SAN MARCOS GUERRERO"],
           CITI:["SUC. SAN MARCOS (17523)"], MOVISTAR:[], SCOTIABANK:[]
         },
         "TLAPA DE COMONFORT": {
-          BBVA: [5086],
+          BBVA: ["(5086) TLAPA"],
           CITI:[
             "SUC. TLAPA DE COMONFORT (17519)"
           ], MOVISTAR:[], SCOTIABANK:[]
         },
         TIXTLA: {
-          BBVA: [5309],
+          BBVA: ["(5309) TIXTLA"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         "HUITZUCO DE LOS FIGUEROA": {
-          BBVA: [5555],
+          BBVA: ["(5555) CHICHIHUALCO"],
           CITI:["SUC. HUITZUCO (REUB) (17536)"], MOVISTAR:[], SCOTIABANK:[]
         },
         "ATOYAC DE ALVAREZ": {
-          BBVA: [5563],
+          BBVA: ["(5563) ATOYAC CENTRO"],
           CITI:["SUC. ATOYAC DE ALVAREZ GUERRERO (17545)"], MOVISTAR:[], SCOTIABANK:[]
         },
         PUNGARABATO: {
-          BBVA: [5565],
+          BBVA: ["(5565) ALTAMIRANO GRO."],
           CITI:[
             "SUC. CD ALTAMIRANO (NUEVA) (17524)"
           ],
           MOVISTAR:[], SCOTIABANK:[]
         },
         PETATLAN: {
-          BBVA: [5567],
+          BBVA: ["(5567) PETATLAN CENTRO"],
           CITI:["SUC. PETATLAN (30232)"], MOVISTAR:[], SCOTIABANK:[]
         },
         "TECPAN DE GALEANA": {
-          BBVA: [5568],
+          BBVA: ["(5568) TECPAN CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         ARCELIA: {
-          BBVA:[5570],
+          BBVA:["(5570) ARCELIA CENTRO"],
           CITI:["SUC. ARCELIA GUERRERO (17546)"], MOVISTAR:[], SCOTIABANK:[]
         },
         TELOLOAPAN: {
-          BBVA: [5572],
+          BBVA: ["(5572) TELOLOAPAN"],
           CITI:["SUC. TELOLOAPAN (17520)"], MOVISTAR:[], SCOTIABANK:[]  
         },
         "CHILAPA DE ALVAREZ": {
-          BBVA: [5574],
+          BBVA: ["(5574) CHILAPA CENTRO"],
           CITI:["SUC. CHILAPA (17543)"], MOVISTAR:[], SCOTIABANK:[]
         },
         "ZIHUATANEJO DE AZUETA": {
-          BBVA: [5576, 5577],
+          BBVA: ["(5576) ZIHUATANEJO CENTRO", "(5577) IXTAPA OFICINA PRINCIPAL IXTAPA"],
           CITI:["SUC. ZIHUATANEJO (17527)"], MOVISTAR:[], SCOTIABANK:[]
         },
         "COYUCA DE BENITEZ": {
@@ -129,11 +129,11 @@ export default {
       },
       Zacatecas: {
         FRESNILLO: {
-          BBVA: [311, 868],
+          BBVA: ["(311) FRESNILLO ALLENDE", "(868) SORIANA FRESNILLO "],
           CITI:[ "(20873) SUC. FRESNILLO" ], MOVISTAR:[], SCOTIABANK:["FRESNILLO"]
         },
         GUADALUPE: {
-          BBVA: [313, 5967],
+          BBVA: ["(313) ZACATECAS LOPEZ PORTILLO", "(5967) GUADALUPE CENTRO"],
           CITI:[
             "(20870) SUC. LA FLORIDA",
             "(20872) EDIF. LOPEZ PORTILLO 101",
@@ -142,86 +142,86 @@ export default {
           MOVISTAR:[], SCOTIABANK:[]  
         },
         JEREZ: {
-          BBVA: [490],
+          BBVA: ["(490) JERÉZ GARCÍA SALINAS"],
           CITI:[ "(20867) SUC. JEREZ"], MOVISTAR:[], SCOTIABANK:[]
         },
         ZACATECAS: {
-          BBVA: [2335, 2467, 5021, 5952, 5953, 6345],
+          BBVA: ["(2335) H ZACATECAS", "(2467) PLAZA ALESSIA", "(5021) ZACATECAS PLAZA TAHONA", "(5952) ZACATECAS CENTRO", "(5953) ZACATECAS OFNA. PRINCIPAL", "(6345) ZACATECAS"],
           CITI:["(20861) SUC. ZACATECAS/EDIF"],
           MOVISTAR:["(732TYO01) CAC ZACATECAS"],
           SCOTIABANK:["COLINAS", "ZACATECAS"]  
         },
         JALPA: {
-          BBVA: [3963],
+          BBVA: ["(3963) JALPA CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         JUCHIPILA: {
-          BBVA: [3964],
+          BBVA: ["(3964) JUCHIPILA CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         "NOCHISTLAN DE MEJIA": {
-          BBVA: [3966],
+          BBVA: ["(3966) NOCHISTLAN CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         LORETO: {
-          BBVA: [3968],
+          BBVA: ["(3968) LORETO CENTRO"],
           CITI:[ "(20866) SUC. LORETO ZAC"], MOVISTAR:[], SCOTIABANK:[]
         },
         TABASCO: {
-          BBVA: [3970],
+          BBVA: ["(3970) TABASCO CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         SOMBRERETE: {
-          BBVA: [5288],
+          BBVA: ["(5288) SOMBRERETEf"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]  
         },
         PINOS: {
-          BBVA: [5780],
+          BBVA: ["(5780) PINOS CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]  
         },
         "RIO GRANDE": {
-          BBVA: [5956],
+          BBVA: ["(5956) RIO GRANDE CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         "TLALTENANGO DE SANCHEZ ROMAN": {
-          BBVA: [5961],
+          BBVA: ["(5961) TLALTENANGO CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]  
         },
         "CALERA": {
-          BBVA: [5963],
+          BBVA: ["(5963) CALERA 5 DE MAYO"],
           CITI:[ "(20880) SUC. CALERA", "(39990) SUC. MODELO ZACATECAS]"],
           MOVISTAR:[], SCOTIABANK:[]
         },
         "JUAN ALDAMA": {
-          BBVA: [5965],
+          BBVA: ["(5965) JUAN ALDAMA CENTENARIO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         OJOCALIENTE: {
-          BBVA: [5968],
+          BBVA: ["(5968) OJOCALIENTE CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         VALPARAISO: {
-          BBVA: [5969],
+          BBVA: ["(5969) VALPARAISO CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         "MONTE ESCOBEDO": {
-          BBVA: [5971],
+          BBVA: ["(5971) MONTE ESCOBEDO CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         "TEUL DE GONZALEZ ORTEGA": {
-          BBVA: [5972],
+          BBVA: ["(5972) TEUL DE GONZALEZ ORTEGA CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
       },
       "San Luis Potosi": {
         MATEHUALA: {
-          BBVA: [330, 5283],
+          BBVA: ["(330) MATEHUALA HIDALGO", "(5283) MATEHUALA"],
           CITI:[ "(20543) SUC. MATEHUALA" ], MOVISTAR:[], SCOTIABANK:[]
         },
         "SAN LUIS POTOSI": {
           BBVA: [
-            331, 332, 335, 336, 471, 472, 830, 1431, 2332, 3057, 4787, 5029, 5104,
-            5771, 5774, 5775, 6391,
+            "(331) SAN LUIS POTOSI MUÑOZ", "(332) SAN LUIS POTOSI GIGANTE", "(335) SAN LUIS POTOSI ABASTOS", "(336) SAN LUIS POTOSI SALVADOR NAVA", "(471) ", "(472) ", "(830) EMPRESAS SAN LUIS POTOSI", "(1431) MERCADO PLAZA AREA", "(2332) H S.L.P.", "(3057) CENTRO PYME SAN LUIS POTOSI FORANEA", "(4787) CITADELLA ( Irregular)", "(5029) LA GRAN LOMA", "(5104) PLAZA SENDERO SAN LUIS POTOSI",
+            "(5771) SAN LUIS POTOSI GLORIETA", "(5774) SAN LUIS POTOSI LOMAS", "(5775) SAN LUIS POTOSI PLAZA EL DORADO", "(6391) SAN LUIS POTOSI",
           ],
           CITI:[
             "(20495) SUC. GLORIETA JUAREZ/EDIF",
@@ -247,11 +247,11 @@ export default {
           ]
         },
         "RIOVERDE": {
-          BBVA: [496],
+          BBVA: ["(496) "],
           CITI:[ "(20541) SUC. RIO VERDE" ], MOVISTAR:[], SCOTIABANK:[]  
         },
         "CIUDAD VALLES": {
-          BBVA: [785, 6529],
+          BBVA: ["(785) CD. VALLES BOULEVARD", "(6529) CD. VALLES HIDALGO"],
           CITI:[ 
             "(20545) SUC. BLVD. CD. VALLES/EDIF.",
             "(20546) SUC. CD. VALLES/REUBICACION"
@@ -260,42 +260,42 @@ export default {
           SCOTIABANK:["CD VALLES"]  
         },
         "EL NARANJO": {
-          BBVA: [4477],
+          BBVA: ["(4477) EL NARANJO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         "SOLEDAD DE GRACIANO SANCHEZ": {
-          BBVA: [5071],
+          BBVA: ["(5071) S. L. P. SOLEDAD"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         CARDENAS: {
-          BBVA: [5786],
+          BBVA: ["(5786) CARDENAS CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         "CIUDAD DEL MAIZ": {
-          BBVA: [5787],
+          BBVA: ["(5787) CIUDAD DEL MAIZ CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         CERRITOS: {
-          BBVA: [5789],
+          BBVA: ["(5789) CERRITOS CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         VENADO: {
-          BBVA: [5791],
+          BBVA: ["(5791) VENADO CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         TAMAZUNCHALE: {
-          BBVA: [6530],
+          BBVA: ["(6530) TAMAZUNCHALE 20 DE NOVIEMBRE"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]  
         },
         EBANO: {
-          BBVA: [6532],
+          BBVA: ["(6532) EBANO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
         "SALINAS": {
-          BBVA: [6829],
+          BBVA: ["(6829) SALINAS DE HIDALGO CENTRO"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
-        "SANTA MARIA DEL RIO": { BBVA: [6830], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        "SANTA MARIA DEL RIO": { BBVA: ["(6830) STA. MARIA DEL RIO CENTRO"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
         "VILLA DE REYES": {
           BBVA: [],
           CITI:["(37266) SUC. GENERAL MOTORS SLP", "(56711) SUC. SEC GM SAN LUIS POTOSI"],
@@ -304,7 +304,7 @@ export default {
       },
       Chiapas: {
         TAPACHULA: {
-          BBVA: [544, 4745, 5007, 5285, 5391],
+          BBVA: ['(544) TAPACHULA', "(4745) TAPACHULA GALERÍAS", "(5007) TAPACHULA PLAZA INN", "(5285) TAPACHULA PLAZA COBALTO", "(5391) TAPACHULA"],
           CITI:[
             "SUC. TACANA/EDIF. 7a. PONIENTE 5 (17491)",
             "SUC. TAPACHULA / EDIF. CENTRAL # 31 (17495)",
@@ -314,14 +314,14 @@ export default {
           SCOTIABANK:["TAPACHULA"]
         },
         "SAN CRISTOBAL DE LAS CASAS": {
-          BBVA: [547, 2297, 4439, 4728],
+          BBVA: ['(547) SAN CRISTOBAL CENTRO', "(2297) PYME SAN CRISTOBAL DE LAS CASAS", "(4439) SAN CRISTOBAL OFNA. PRINCIPAL", "(4728) SAN CRISTOBAL EJE VIAL"],
           CITI:["SUC. PLAZA SAN DIEGO (REUB) (38758)", "SUC. SAN CRISTOBAL (REUB) (38972)"],
           MOVISTAR:[],
           SCOTIABANK:["SAN CRISTOBAL DE LAS CASAS"]
         },
         "TUXTLA GUTIERREZ": {
           BBVA:[
-            896, 1394, 1581, 4710, 4785, 5009, 5058, 5191, 5264, 6697, 6698, 6699,6700,
+            '(896) TERÁN', "(1394) AMBAR FASHION", "(1581) LAS AMERICAS TUXTLA", "(4710) PLAZA LAS PALMAS", "(4785) TUXTLA MIRADOR", "(5009) TUXTLA SORIANA ORIENTE", "(5058) TUXTLA MIRAVALLE", "(5191) TUXTLA PLAZA SAN LUIS", "(5264) PLAZA DEL SOL", "(6697) TUXTLA", "(6698) TUXTLA KRYSTAL", "(6699) MERCADO","(6700) TUXTLA",
           ],
           CITI:[
             "SUC. TUXTLA / EDIF. 1a SUR PTE (17465)",
@@ -337,36 +337,36 @@ export default {
           MOVISTAR:[ "(07-03526) LOMAS DEL VALLE" ],
           SCOTIABANK:["TULXTLA GUTIERREZ", "PLAZA BONAMPAK", "POLIFORUM", "QUINTA NORTE"]
         },
-        "LAS MARGARITAS": { BBVA: [1910], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        OCOSINGO: { BBVA: [2292], CITI:["SUC. OCOSINGO(17509)"], MOVISTAR:[], SCOTIABANK:[] },
-        HUIXTLA: { BBVA: [4437], CITI:["SUC. HUIXTLA (REUB) (17511)"], MOVISTAR:[], SCOTIABANK:[] },
+        "LAS MARGARITAS": { BBVA: ["(1910) LAS MARGARITAS"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        OCOSINGO: { BBVA: ["(2292) OCOSINGO CHIAPAS"], CITI:["SUC. OCOSINGO(17509)"], MOVISTAR:[], SCOTIABANK:[] },
+        HUIXTLA: { BBVA: ["(4437) HUIXTLA CENTRO"], CITI:["SUC. HUIXTLA (REUB) (17511)"], MOVISTAR:[], SCOTIABANK:[] },
         "COMITAN DE DOMINGUEZ": {
-          BBVA: [4441, 6703],
+          BBVA: ["(4441) COMITAN OFNA. PRINCIPAL", "(6703) COMITAN BOULEVARD"],
           CITI:[
             "SUC. COMITAN (17513)",
             "SUC. BALUN CANAN (REUB) (26923)"
           ],
           MOVISTAR:[], SCOTIABANK:[] },
-        REFORMA: { BBVA: [4645], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        MOTOZINTLA: { BBVA: [5263] },
-        ARRIAGA: { BBVA: [5394], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        TONALA: { BBVA: [5397], CITI:["SUC. TONALA (17489)"], MOVISTAR:[], SCOTIABANK:[] },
-        PIJIJIAPAN: { BBVA: [5398], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        "FRONTERA COMALAPA": { BBVA: [5404], CITI:["SUC. FRONTERA COMALAPA (17512)"], MOVISTAR:[], SCOTIABANK:[] },
-        "CHIAPA DE CORZO": { BBVA: [6709], CITI:["SUC. CHIAPA DE CORZO (17516)"], MOVISTAR:[], SCOTIABANK:[] },
+        REFORMA: { BBVA: ["(4645) REFORMA"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        MOTOZINTLA: { BBVA: ["(5263) MOTOZINTLA"] },
+        ARRIAGA: { BBVA: ["(5394) ARRIAGA CENTRO"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        TONALA: { BBVA: ["(5397) TONALÁ"], CITI:["SUC. TONALA (17489)"], MOVISTAR:[], SCOTIABANK:[] },
+        PIJIJIAPAN: { BBVA: ["(5398) PIJIJIAPAN CENTRO"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        "FRONTERA COMALAPA": { BBVA: ["(5404) FRONTERA COMALAPA CENTRO"], CITI:["SUC. FRONTERA COMALAPA (17512)"], MOVISTAR:[], SCOTIABANK:[] },
+        "CHIAPA DE CORZO": { BBVA: ["(6709) CHIAPA DE CORZO CENTRO"], CITI:["SUC. CHIAPA DE CORZO (17516)"], MOVISTAR:[], SCOTIABANK:[] },
         VILLAFLORES: {
-          BBVA: [6711],
+          BBVA: ["(6711) VILLAFLORES CENTRO"],
           CITI:["SUC. VILLAFLORES (REUB) / EST. (44908)"],
           MOVISTAR:[], SCOTIABANK:[]
         },
-        CINTALAPA: { BBVA: [6713], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        CINTALAPA: { BBVA: ["(6713) CINTALAPA CENTRO"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
         PALENQUE: {
-          BBVA: [6715],
+          BBVA: ["(6715) PALENQUE CENTRO"],
           CITI:["SUC. PALENQUE (REUB) (46443)"],
           MOVISTAR:[], SCOTIABANK:[]
         },
-        YAJALON: { BBVA: [6717], CITI:["SUC. YAJALON (17462)"], MOVISTAR:[], SCOTIABANK:[] },
-        "VENUSTIANO CARRANZA": { BBVA: [6718], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        YAJALON: { BBVA: ["(6717) YAJALON CENTRO"], CITI:["SUC. YAJALON (17462)"], MOVISTAR:[], SCOTIABANK:[] },
+        "VENUSTIANO CARRANZA": { BBVA: ["(6718) VENUSTIANO CARRANZA CHIAPAS"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
         "OCOZOCOAUTLA DE ESPINOSA": {
           BBVA: [],
           CITI:["SUC. OCOZOCOAUTLA (17508)"],
@@ -383,66 +383,66 @@ export default {
       },
       Tlaxcala: {
         "PAPALOTLA DE XICOHTENCATL": {
-          BBVA: [513],
+          BBVA: ["(513) PANZACOLA INDUSTRIAS"],
           CITI:[ "(30248) SUC. PANZACOLA TLAXCALA"], MOVISTAR:[], SCOTIABANK:[]
         },
         HUAMANTLA: {
-          BBVA: [538],
+          BBVA: ["(538) HUAMANTLA JUAREZ"],
           CITI:[
             "(26518) SUC. HUAMANTLA"
           ], MOVISTAR:[], SCOTIABANK:[]
         },
         CHIAUTEMPAN: {
-          BBVA: [690, 5259],
+          BBVA: ["(690) SANTA ANA CHIAUTEMPAN", "(5259) PLAZA DIAMANTE"],
           CITI:["(18652) SANTA ANA CHIAUTEMPAN"],
           MOVISTAR:[], SCOTIABANK:[]
         },
         TLAXCALA: {
-          BBVA: [5882],
+          BBVA: ["(5882) OFICINAPRINCIPAL"],
           CITI:[ "(18643) SUC. TLAXCALA / EDIF."],
           MOVISTAR:[], SCOTIABANK:[]
         },
         APIZACO: {
-          BBVA: [5884],
+          BBVA: ["(5884) APIZACO"],
           CITI:["(18653) SUC. APIZACO", "(18654) SUC. BLVD. MADERO (REUB)"],
           MOVISTAR:[], SCOTIABANK:[]
         },
-        CALPULALPAN: { BBVA: [5888], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        TLAXCO: { BBVA: [5890], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        ZACATELCO: { BBVA: [5891], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        NATIVITAS: { BBVA: [5892], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        CALPULALPAN: { BBVA: ["(5888) CALPULALPAN CENTRO"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        TLAXCO: { BBVA: ["(5890) TLAXCO"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        ZACATELCO: { BBVA: ["(5891) ZACATELCO"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        NATIVITAS: { BBVA: ["(5892) NATIVITAS"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
       },
       Nayarit: {
-        COMPOSTELA: { BBVA: [661, 5674, 5678], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        TEPIC: { BBVA: [765, 767, 911, 912, 913, 4602, 5297, 6373], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        "BAHIA DE BANDERAS": { BBVA: [5224, 8137], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        ACAPONETA: { BBVA: [5659], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        "SANTIAGO IXCUINTLA": { BBVA: [5661], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        TUXPAN: { BBVA: [5663], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        TECUALA: { BBVA: [5665], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        "IXTLAN DEL RIO": { BBVA: [5669], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        "SAN BLAS": { BBVA: [5671], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        COMPOSTELA: { BBVA: ["(661) COMPOSTELA", "(5674) LAS VARAS", "(5678) LA PEÑITA"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        TEPIC: { BBVA: ["(765) PLAZA LA CANTERA", "(767) AUTOSERVICIO FORUM TEPIC", "(911) INSURGENTES", "(912) MOLOLOA", "(913) PRINCIPAL TEPIC", "(4602) TEPIC XALISCO", "(5297) NAYAR ABASTOS TEPIC", "(6373) TEPIC"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        "BAHIA DE BANDERAS": { BBVA: ["(5224) BUCERIAS", "(8137) MEZCALES"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        ACAPONETA: { BBVA: ["(5659) ACAPONETA"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        "SANTIAGO IXCUINTLA": { BBVA: ["(5661) SANTIAGO IXCUINTLA"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        TUXPAN: { BBVA: ["(5663) TUXPAN"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        TECUALA: { BBVA: ["(5665) TECUALA"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        "IXTLAN DEL RIO": { BBVA: ["(5669) IXTLAN"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        "SAN BLAS": { BBVA: ["(5671) VILLA HIDALGO"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
       },
       "Quintana Roo": {
         "BENITO JUAREZ": {
           BBVA: [
-            850, 851, 1073, 1367, 1487, 1488, 1571, 1572, 1575, 1577, 1580, 1582,
-            1583, 1591, 1807, 2366, 2821, 4640, 4675, 5035, 5057, 5103, 5762,
-            5764, 6351,
+            "(850) CANCUN AV. TULUM", "(851) CANCUN ZONA HOTELERA", "(1073) CANCÚN PLAZA LAS AMÉRICAS", "(1367) GRAN PLAZA CANCÚN", "(1487) PLAZA HEROES CANCUN", "(1488 MULTIPLAZA CANCÚN)", "(1571) CANCUN MALL", "(1572) CENTRO MAYA", "(1575) FORUM BY THE SEA", "(1577) LA ISLA CANCÚN E ISLA II", "(1580) LAS AMERICAS PLAYA DEL CARMEN", "(1582) MALECÓN AMÉRICAS CANCÚN",
+            "(1583) PABELLÓN CUMBRES CANCÚN", "(1591) PUNTA LANGOSTA", "(1807) EMPRESAS Y GOBIERNO CANCUN", "(2366) HIPOTECARIA CANCUN", "(2821) CENTRO CORPORATIVO CANCÚN", "(4640) PASEO CANCUN", "(4675) PABELLON CUMBRES CANCUN", "(5035) LA LUNA CANCUN", "(5057) CANCUN KABAH", "(5103) PLAZA HOLLYWOOD", "(5762) CANCUN PLAZA PORTALES",
+            "(5764) CANCUN OFNA. PRINCIPAL/CANCUN", "(6351) CANCUN",
           ],
           CITI:[],
           MOVISTAR:["(523MCA08) MINICAC PLAZA LAS AMERICAS CANCUN", "(23-03004) YAXCHILAN - KABAH"],
           SCOTIABANK:[]
         },
-        COZUMEL: { BBVA: [854, 5284], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        "PUERTO MORELOS": { BBVA: [873], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        COZUMEL: { BBVA: ["(854) COZUMEL CENTRO", "(5284) COZUMEL PLAZA NORTE"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        "PUERTO MORELOS": { BBVA: ["(873) PUERTO MORELOS"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
         SOLIDARIDAD: {
-          BBVA: [1840, 2050, 2272, 2372, 2609, 4762, 5133, 5765],
+          BBVA: ["(1840) EMPRESAS Y GOBIERNO PLAYA DEL CARMEN", 2050, "(2272) PUERTO AVENTURAS", "(2372) ", "(2609) SITE PLAYA DEL CARMEN", "(4762) CONSTITUYENTES PLAYA DEL CARMEN", "(5133) PLAYACAR CENTRO MAYA", "(5765) COZUMEL PLAZA NORTE"],
           CITI:[], MOVISTAR:[], SCOTIABANK:[]
         },
-        "FELIPE CARRILLO PUERTO": { BBVA: [1913], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        TULUM: { BBVA: [2277, 5089], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
-        "OTHON P. BLANCO": { BBVA: [5031, 5757], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        "FELIPE CARRILLO PUERTO": { BBVA: ["(1913) FELIPE CARILLO"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        TULUM: { BBVA: ["(2277) PYME TULUM", "(5089) TULUM RIVIERA MAYA"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
+        "OTHON P. BLANCO": { BBVA: ["(5031) LAS AMERICAS CHETUMAL", "(5757) CHETUMAL PRINCIPAL"], CITI:[], MOVISTAR:[], SCOTIABANK:[] },
       },
       Aguascalientes: {
         "JESUS MARIA": {
@@ -1184,7 +1184,7 @@ export default {
   computed: {
     cheque() {
       if(this.id){
-        return this.$store.getters.loadedMeetup(this.id);
+        return this.$store.getters.getCheque(this.id);
       } return null
     },
     sucursal: {
